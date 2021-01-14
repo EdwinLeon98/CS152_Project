@@ -6,9 +6,13 @@ int identCnt = 0;
   
 /*** Rule Section ***/
 %%
-[a-zA-Z][a-zA-Z0-9_]+[a-zA-Z0-9]+   {identCnt++; currPos += yyleng;}  //identifier
-[0-9][a-zA-Z0-9_]+[a-zA-Z0-9]+        {printf("Invalid Character: %s at Line %d and Position %d\n", yytext, currLine, currPos); return 0;}  //invalid identifier #1
+[0-9]+ 				    {printf("NUMBER %s\n", yytext); currPos += yyleng;} //number
+[a-zA-Z][a-zA-Z0-9_]+[a-zA-Z0-9]+   {printf("IDENT %s\n", yytext); identCnt++; currPos += yyleng;}  //identifier
+[0-9][a-zA-Z0-9_]+[a-zA-Z0-9]+      {printf("Invalid Character: %s at Line %d and Position %d\n", yytext, currLine, currPos); return 0;}  //invalid identifier #1
 [a-zA-Z][a-zA-Z0-9_]+_+             {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
+[?!@#$^&]		  	    {printf("Errot at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
+-				    {printf("SUB\n"); currPos += yyleng;} //Subtraction
+
 \n                                  {currLine++; currPos = 1;}
 %%
   
