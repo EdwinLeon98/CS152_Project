@@ -44,17 +44,17 @@ return 			            {printf("RETURN\n"); currPos += yyleng;} //Return keyword
 
 {} // Comparison Ops
 ==				    {printf("EQ\n"); currPos += yyleng;} //Is equal to
-\<\>				    {printf("NEQ\n"); currPos += yyleng;} //Not equal to
+\<\>				{printf("NEQ\n"); currPos += yyleng;} //Not equal to
 \<				    {printf("LT\n"); currPos += yyleng;} //Less than
 \>				    {printf("GT\n"); currPos += yyleng;} //Greater than
 \<=				    {printf("LTE\n"); currPos += yyleng;} //Less than or equal to
 \>=				    {printf("GTE\n"); currPos += yyleng;} //Greater than or equal to
 
 {} // Numbers and Identifiers
-[0-9]+ 				        {printf("NUMBER %s\n", yytext); currPos += yyleng;} //number
-[a-zA-Z]([a-zA-Z0-9_]+[a-zA-Z0-9]+)?   {printf("IDENT %s\n", yytext); identCnt++; currPos += yyleng;}  //identifier
-[0-9][a-zA-Z0-9_]+[a-zA-Z0-9]+      {printf("Invalid Character: %s at Line %d and Position %d\n", yytext, currLine, currPos); return 0;}  //invalid identifier #1
-[a-zA-Z][a-zA-Z0-9_]+_+             {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
+[0-9]+ 				                    {printf("NUMBER %s\n", yytext); currPos += yyleng;} //number
+[a-zA-Z]([a-zA-Z0-9_]+[a-zA-Z0-9]+)?    {printf("IDENT %s\n", yytext); identCnt++; currPos += yyleng;}  //identifier
+[0-9][a-zA-Z0-9_]+[a-zA-Z0-9]+          {printf("Invalid Character: %s at Line %d and Position %d\n", yytext, currLine, currPos); return 0;}  //invalid identifier #1
+[a-zA-Z][a-zA-Z0-9_]+_+                 {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
 
 {} // Special Symbols
 ;				    {printf("SEMICOLON\n"); currPos += yyleng;} //Semicolon symbol
@@ -68,9 +68,9 @@ return 			            {printf("RETURN\n"); currPos += yyleng;} //Return keyword
 
 {} // Comments and Whitespaces - not to be outputted
 ##(.+)?                {currPos += yyleng;}
-[ \t]               {currPos += yyleng;}
-\n                                  {currLine++; currPos = 1;}
-.                   {printf("Error at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
+[ \t]                  {currPos += yyleng;}
+\n                     {currLine++; currPos = 1;}
+.                      {printf("Error at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
 %%
   
 /*** Code Section ***/
