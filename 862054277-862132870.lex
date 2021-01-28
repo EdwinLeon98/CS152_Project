@@ -53,8 +53,8 @@ return 			            {printf("RETURN\n"); currPos += yyleng;} //Return keyword
 {} // Numbers and Identifiers
 [0-9]+ 				                    {printf("NUMBER %s\n", yytext); currPos += yyleng;} //number
 [a-zA-Z]([a-zA-Z0-9_]+[a-zA-Z0-9]+)?    {printf("IDENT %s\n", yytext); identCnt++; currPos += yyleng;}  //identifier
-[0-9][a-zA-Z0-9_]+[a-zA-Z0-9]+          {printf("Invalid Character: %s at Line %d and Position %d\n", yytext, currLine, currPos); return 0;}  //invalid identifier #1
-[a-zA-Z][a-zA-Z0-9_]+_+                 {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
+[0-9]+[a-zA-Z_]+([a-zA-Z0-9]+)?          {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter", currLine, currPos, yytext); return 0;}  //invalid identifier #1
+[a-zA-Z]([a-zA-Z0-9_]+?)_+              {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
 
 {} // Special Symbols
 ;				    {printf("SEMICOLON\n"); currPos += yyleng;} //Semicolon symbol
