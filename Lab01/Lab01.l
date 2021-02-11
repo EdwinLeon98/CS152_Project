@@ -1,54 +1,34 @@
-/*** Definition Section ***/
-%{
-int currLine = 1, currPos = 1;
-int intCount = 0;
-int opCount = 0;
-int parCount = 0;
-int eqCount = 0;
+   /* cs152-fall08 */
+   /* A flex scanner specification for the calculator language */
+   /* Written by Dennis Jeffrey */
+
+%{   
+   #include "y.tab.h"
+   int currLine = 1, currPos = 1;
+   int numNumbers = 0;
+   int numOperators = 0;
+   int numParens = 0;
+   int numEquals = 0;
 %}
   
-/*** Rule Section ***/
+DIGIT    [0-9]
+   
 %%
-[0-9]+ {printf("%s", yytext); intCount++; currPos += yyleng;}
-\+     {printf(" + "); opCount++; currPos++;}
--      {printf(" - "); opCount++; currPos++;}
-\*     {printf(" * "); opCount++; currPos++;}
-\/     {printf(" / "); opCount++; currPos++;}
-\(     {printf("("); parCount++; currPos++;}
-\)     {printf(")"); parCount++; currPos++;}
-=      {printf(" =\n"); eqCount++; currPos++;}
-\n     {currLine++; currPos = 1; printf("%d) ", currLine);}
-[ \t]+ {currPos += yyleng;}
-.      {printf("Invalid Character: %s at Line %d and Position %d\n", yytext, currLine, currPos); return 0;}
+
+"-"            {currPos += yyleng; numOperators++; return MINUS;}
+"+"            {currPos += yyleng; numOperators++; return PLUS;}
+"*"            {currPos += yyleng; numOperators++; return MULT;}
+"/"            {currPos += yyleng; numOperators++; return DIV;}
+"="            {currPos += yyleng; numEquals++; return EQUAL;}
+"("            {currPos += yyleng; numParens++; return L_PAREN;}
+")"            {currPos += yyleng; numParens++; return R_PAREN;}
+
+(\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)   {currPos += yyleng; yylval.dval = atof(yytext); numNumbers++; return NUMBER;}
+
+[ \t]+         {/* ignore spaces */ currPos += yyleng;}
+
+"\n"           {currLine++; currPos = 1; return END;}
+
+.              {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
+
 %%
-  
-/*** Code Section ***/
-int yywrap(){}
-int main(){
-    printf("1) ");
-  
-// Explanation: 
-// yywrap() - wraps the above rule section
-/* yyin - takes the file pointer
-          which contains the input*/
-/* yylex() - this is the main flex function
-          which runs the Rule Section*/
-// yytext is the text in the buffer
-  
-// Uncomment the lines below
-// to take input from file
-// FILE *fp;
-// char filename[50];
-// printf("Enter the filename: \n");
-// scanf("%s",filename);
-// fp = fopen(filename,"r");
-// yyin = fp;
-  
-yylex();
-printf("\nNumber of Integers - %d\n", intCount);
-printf("\nNumber of Operators - %d\n", opCount);
-printf("\nNumber of Parenthesis - %d\n", parCount);
-printf("\nNumber of Equals - %d\n", eqCount);
-  
-return 0;
-}
