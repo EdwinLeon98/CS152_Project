@@ -40,25 +40,132 @@ funclocals: declaration SEMICOLON funclocals                            { printf
             | END_LOCALS BEGIN_BODY funcbody                            { printf("funclocals -> END_LOCALS BEGIN_BODY funcbody");}
             ;
 
-funcbody: statement SEMICOLON END_BODY                                  { printf("funcbody -> statement SEMICOLON END_BODY");}
+funcbody:   statement SEMICOLON END_BODY                                { printf("funcbody -> statement SEMICOLON END_BODY");}
             | statement SEMICOLON statement                             { printf("funcbody -> statement SEMICOLON statement");}                         
 
 declaration: funcident
             ;
 
-funcident: IDENT COMMA funcident
+funcident:  IDENT COMMA funcident
             | IDENT COLON array
             ;
 
-array: INTEGER
+array: 	    INTEGER
             | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
             ;
 
-statement: var ASSIGN expression
-            | if | while | dowhile | read | write | break | RETURN expression
+statement:  var ASSIGN expression
+            | if 
+	    | while
+            | dowhile
+	    | read
+	    | write
+	    | break
+	    | RETURN expression
             ;
 
+if:	    IF boolexpr THEN statement SEMICOLON elsefunc
+	    ;
 
+elsefunc:   statement SEMICOLON elsefunc
+	    | ELSE statement SEMICOLON elsefunc
+	    | ENDIF 
+	    ;
+
+while:	    WHILE boolexpr BEGINLOOP whilefunc
+	    ;
+
+whilefunc:  statement SEMICOLON whilefunc
+	    | statement SEMICOLON ENDLOOP
+	    ;
+
+dowhile:    DO BEGINLOOP dofunc
+	    ;
+
+dofunc:	    statement SEMICOLON dofunc
+	    | statement SEMICOLON ENDLOOP WHILE boolexpr
+	    ;
+
+read:	    READ rwfunc
+	    ;
+
+write:	    WRITE rwfunc
+	    ;
+
+rwfunc:     var COMMA rwfunc
+	    | var
+ 	    ;
+
+boolexpr:   relandexpr
+	    | relandexpr boolexpr2
+	    ;
+
+boolexpr2:  OR relandexpr boolexpr2
+	    | OR relandexpr
+	    ;
+
+relandexpr: relexpr
+	    | relexpr relandexpr2
+	    ;
+
+relandexpr2: AND relexpr elandexpr2
+	     | AND relexpr
+	     ;
+
+relexpr:    NOT relexpr2
+	    | relexpr2
+	    ;
+
+relexpr2:   expression comp expression
+	    | TRUE
+	    | FALSE
+	    | L_PAREN boolexpr R_PAREN
+	    ;
+
+comp: 	    EQ
+	    | NEQ
+	    | LT
+	    | GT
+	    | LTE
+            | GTE
+	    ;
+
+expression: multexpr
+	    | multexpr expression2
+	    ;
+
+expression2: /* epsilon */
+	     | ADD multexpr expression2
+	     | SUB multexpr expression2
+	     ;
+
+multexpr:    /* epsilon */
+	     | MULT term multexpr2
+	     | DIV term multexpr2
+	     | MOD term multexpr2
+	     ;
+
+term:	     term1
+	     | SUB term1
+             | term2
+	     ;
+
+term1: 	     var
+	     | NUMBER
+	     | L_PAREN expression R_PAREN
+	     ;
+
+term2:       IDENT L_PAREN term3 R_PAREN
+	     ;
+
+term3:	     /* epsilon */
+	     | expression
+	     | expression COMMA term3
+	     ; 
+
+var: 	     IDENT
+	     | IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET
+     	     ;
 
 exp:		NUMBER                { printf("exp -> NUMBER\n");}
 			| exp PLUS exp        { printf("exp -> exp PLUS exp\n");}
