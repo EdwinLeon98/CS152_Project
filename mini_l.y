@@ -1,4 +1,3 @@
-/* calculator. */
 %{
  #include <stdio.h>
  #include <stdlib.h>
@@ -19,162 +18,148 @@
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY ARRAY OF IF THEN ENDIF ELSE WHILE DO BEGINLOOP ENDLOOP BREAK READ WRITE AND OR NOT TRUE FALSE RETURN
 %token <dval> NUMBER
 %token <ival> INTEGER
-%left PLUS MINUS
+%left ADD SUB
 %left MULT DIV
-%nonassoc UMINUS
 
 
 %% 
 program:	/* epsilon */
-			| function program                                          {printf("program -> function program\n");}
+			| function program                                          	{printf("program -> function program\n");}
 			;
 
-function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams            { printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS");}
+function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams            	{ printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS\n");}
 			;
 
-funcparams: declaration SEMICOLON funcparams                            { printf("funcparams -> declaration SEMICOLON funcparams");}
-            | END_PARAMS BEGIN_LOCALS funclocals                        { printf("funcparams -> END_PARAMS BEGIN_LOCALS funclocals");}
+funcparams: declaration SEMICOLON funcparams                            	{ printf("funcparams -> declaration SEMICOLON funcparams\n");}
+            | END_PARAMS BEGIN_LOCALS funclocals                        	{ printf("funcparams -> END_PARAMS BEGIN_LOCALS funclocals\n");}
             ;
 
-funclocals: declaration SEMICOLON funclocals                            { printf("funclocals -> declaration SEMICOLON funclocals");}
-            | END_LOCALS BEGIN_BODY funcbody                            { printf("funclocals -> END_LOCALS BEGIN_BODY funcbody");}
+funclocals: declaration SEMICOLON funclocals                            	{ printf("funclocals -> declaration SEMICOLON funclocals\n");}
+            | END_LOCALS BEGIN_BODY funcbody                            	{ printf("funclocals -> END_LOCALS BEGIN_BODY funcbody\n");}
             ;
 
-funcbody:   statement SEMICOLON END_BODY                                { printf("funcbody -> statement SEMICOLON END_BODY");}
-            | statement SEMICOLON statement                             { printf("funcbody -> statement SEMICOLON statement");}                         
+funcbody:   statement SEMICOLON END_BODY                                	{ printf("funcbody -> statement SEMICOLON END_BODY\n");}
+            | statement SEMICOLON funcbody                             		{ printf("funcbody -> statement SEMICOLON statement\n");}                         
 
-declaration: funcident
+declaration: funcident														{ printf("declaration -> funcident\n");}
             ;
 
-funcident:  IDENT COMMA funcident
-            | IDENT COLON array
+funcident:  IDENT COMMA funcident											{ printf("funcident -> IDENT COMMA funcident\n");}
+            | IDENT COLON array												{ printf("funcident -> IDENT COLON array\n");}
             ;
 
-array: 	    INTEGER
-            | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER
+array: 	    INTEGER															{ printf("array -> INTEGER\n");}
+            | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER		{ printf("array -> ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER\n");}
             ;
 
-statement:  var ASSIGN expression
-            | if 
-	    | while
-            | dowhile
-	    | read
-	    | write
-	    | break
-	    | RETURN expression
-            ;
+statement:  var ASSIGN expression											{ printf("statement -> var ASSIGN expression\n");}
+        	| if 															{ printf("statement -> if\n");}
+	    	| while															{ printf("statement -> while\n");}
+        	| dowhile														{ printf("statement -> dowhile\n");}
+	    	| read															{ printf("statement -> read\n");}
+	    	| write															{ printf("statement -> write\n");}
+	    	| BREAK															{ printf("statement -> BREAK\n");}
+	    	| RETURN expression												{ printf("statement -> RETURN expression\n");}
+        	;
 
-if:	    IF boolexpr THEN statement SEMICOLON elsefunc
-	    ;
+if:	    	IF boolexpr THEN statement SEMICOLON elsefunc					{ printf("if -> IF boolexpr THEN statement SEMICOLON elsefunc\n");}
+	    	;
 
-elsefunc:   statement SEMICOLON elsefunc
-	    | ELSE statement SEMICOLON elsefunc
-	    | ENDIF 
-	    ;
+elsefunc:   statement SEMICOLON elsefunc									{ printf("elsefunc -> statement SEMICOLON elsefunc\n");}
+	    	| ELSE statement SEMICOLON elsefunc								{ printf("elsefunc -> ELSE statement SEMICOLON elsefunc\n");}
+	    	| ENDIF															{ printf("elsefunc -> ENDIF\n");}
+	    	;
 
-while:	    WHILE boolexpr BEGINLOOP whilefunc
-	    ;
+while:	    WHILE boolexpr BEGINLOOP whilefunc								{ printf("while -> WHILE boolexpr BEGINLOOP whilefunc\n");}
+	    	;
 
-whilefunc:  statement SEMICOLON whilefunc
-	    | statement SEMICOLON ENDLOOP
-	    ;
+whilefunc:  statement SEMICOLON whilefunc									{ printf("whilefunc -> statement SEMICOLON whilefunc\n");}
+	    	| statement SEMICOLON ENDLOOP									{ printf("whilefunc -> statement SEMICOLON ENDLOOP\n");}
+	    	;
 
-dowhile:    DO BEGINLOOP dofunc
-	    ;
+dowhile:    DO BEGINLOOP dofunc												{ printf("dowhile -> DO BEGINLOOP dofunc\n");}
+	    	;
 
-dofunc:	    statement SEMICOLON dofunc
-	    | statement SEMICOLON ENDLOOP WHILE boolexpr
-	    ;
+dofunc:	    statement SEMICOLON dofunc										{ printf("dofunc -> statement SEMICOLON dofunc\n");}
+	    	| statement SEMICOLON ENDLOOP WHILE boolexpr					{ printf("dofunc -> statement SEMICOLON ENDLOOP WHILE boolexpr\n");}
+	    	;
 
-read:	    READ rwfunc
-	    ;
+read:	    READ rwfunc														{ printf("read -> READ rwfunc\n");}
+	    	;
 
-write:	    WRITE rwfunc
-	    ;
+write:	    WRITE rwfunc													{ printf("write -> WRITE rwfunc\n");}
+	    	;
 
-rwfunc:     var COMMA rwfunc
-	    | var
- 	    ;
+rwfunc:     var COMMA rwfunc												{ printf("rwfunc -> var COMMA rwfunc\n");}
+	    	| var															{ printf("rwfunc -> var\n");}
+ 	    	;
 
-boolexpr:   relandexpr
-	    | relandexpr boolexpr2
-	    ;
+boolexpr:   relandexpr														{ printf("boolexpr -> relandexpr\n");}
+	    	| relandexpr boolexpr2											{ printf("boolexpr -> relandexpr boolexpr2\n");}
+	    	;
 
-boolexpr2:  OR relandexpr boolexpr2
-	    | OR relandexpr
-	    ;
+boolexpr2:  OR relandexpr boolexpr2											{ printf("boolexpr2 -> OR relandexpr boolexpr2\n");}
+	    	| OR relandexpr													{ printf("boolexpr2 -> OR relandexpr\n");}
+	    	;
 
-relandexpr: relexpr
-	    | relexpr relandexpr2
-	    ;
+relandexpr: relexpr															{ printf("relandexpr -> relexpr\n");}
+	    	| relexpr relandexpr2											{ printf("relandexpr -> relexpr relandexpr2\n");}
+	    	;
 
-relandexpr2: AND relexpr elandexpr2
-	     | AND relexpr
-	     ;
+relandexpr2: AND relexpr relandexpr2										{ printf("relandexpr2 -> AND relexpr relandexpr2\n");}
+	    	| AND relexpr													{ printf("relandexpr2 -> AND relexpr\n");}
+	    	;
 
-relexpr:    NOT relexpr2
-	    | relexpr2
-	    ;
+relexpr:    NOT relexpr2													{ printf("relexpr -> NOT relexpr2\n");}
+	    	| relexpr2														{ printf("relexpr -> relexpr2\n");}
+	    	;
 
-relexpr2:   expression comp expression
-	    | TRUE
-	    | FALSE
-	    | L_PAREN boolexpr R_PAREN
-	    ;
+relexpr2:   expression comp expression										{ printf("relexpr2 -> expression comp expression\n");}
+	    	| TRUE															{ printf("relexpr2 -> TRUE\n");}
+	    	| FALSE															{ printf("relexpr2 -> FALSE\n");}
+	    	| L_PAREN boolexpr R_PAREN										{ printf("relexpr2 -> L_PAREN boolexpr R_PAREN\n");}
+	    	;
 
-comp: 	    EQ
-	    | NEQ
-	    | LT
-	    | GT
-	    | LTE
-            | GTE
-	    ;
+comp: 	    EQ																{ printf("comp -> EQ\n");}
+	    	| NEQ															{ printf("comp -> NEQ\n");}
+	    	| LT															{ printf("comp -> LT\n");}
+	    	| GT															{ printf("comp -> GT\n");}
+	    	| LTE															{ printf("comp -> LTE\n");}
+        	| GTE															{ printf("comp -> GTE\n");}
+	    	;
 
-expression: multexpr
-	    | multexpr expression2
-	    ;
+expression: multexpr														{ printf("expression -> multexpr\n");}
+	    	| multexpr ADD expression										{ printf("expression -> multexpr ADD expression\n");}
+			| multexpr SUB expression										{ printf("expression -> multexpr SUB expression\n");}
+	    	;
 
-expression2: /* epsilon */
-	     | ADD multexpr expression2
-	     | SUB multexpr expression2
-	     ;
+multexpr: 	term															{ printf("multexpr -> term\n");}
+			| term MULT multexpr											{ printf("multexpr -> term MULT multexpr\n");}
+			| term DIV multexpr												{ printf("multexpr -> term DIV multexpr\n");}
+			| term MOD multexpr												{ printf("multexpr -> term MOD multexpr\n");}
+			;
 
-multexpr:    /* epsilon */
-	     | MULT term multexpr2
-	     | DIV term multexpr2
-	     | MOD term multexpr2
-	     ;
+term:	    term1															{ printf("term -> term1\n");}
+	 		| SUB term1														{ printf("term -> SUB term1\n");}
+            | term2															{ printf("term -> term2\n");}
+	    	;									
 
-term:	     term1
-	     | SUB term1
-             | term2
-	     ;
+term1: 	    var																{ printf("term1 -> var\n");}
+	    	| NUMBER														{ printf("term1 -> NUMBER\n");}
+	    	| L_PAREN expression R_PAREN									{ printf("term1 -> L_PAREN expression R_PAREN\n");}
+	 		;
 
-term1: 	     var
-	     | NUMBER
-	     | L_PAREN expression R_PAREN
-	     ;
-
-term2:       IDENT L_PAREN term3 R_PAREN
-	     ;
+term2:      IDENT L_PAREN term3 R_PAREN										{ printf("term2 -> IDENT L_PAREN term3 R_PAREN\n");}
+	    	;
 
 term3:	     /* epsilon */
-	     | expression
-	     | expression COMMA term3
-	     ; 
+	    	| expression													{ printf("term3 -> expression\n");}
+	    	| expression COMMA term3										{ printf("term3 -> expression COMMA term3\n");}
+	    	; 
 
-var: 	     IDENT
-	     | IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET
-     	     ;
-
-exp:		NUMBER                { printf("exp -> NUMBER\n");}
-			| exp PLUS exp        { printf("exp -> exp PLUS exp\n");}
-			| exp MINUS exp       { printf("exp -> exp MINUS exp\n");}
-			| exp MULT exp        { printf("exp -> exp MULT exp\n");}
-			| exp DIV exp         { printf("exp -> exp DIV exp\n");}
-			| MINUS exp %prec UMINUS { printf("exp -> MINUS exp prec UMINUS\n");}
-			| L_PAREN exp R_PAREN { printf("exp -> L_PAREN exp R_PAREN\n");}
-			;
+var: 		IDENT															{ printf("var -> IDENT\n");}
+	    	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET			{ printf("var -> IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
+     		;
 %%
 
 int main(int argc, char **argv) {
@@ -189,5 +174,5 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *msg) {
-   printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
+   printf("** Line %d, position %d: %s\n", currLine+1, currPos, msg);
 }

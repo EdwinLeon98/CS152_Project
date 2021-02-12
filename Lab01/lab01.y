@@ -24,11 +24,11 @@
 
 
 %% 
-input:	
-			| input line            {printf("input -> input line\n");}
+program:	
+			| function program            {printf("program -> function program\n");}
 			;
 
-line:		exp EQUAL END         { printf("line -> exp EQUAL END"); printf("\t%f\n", $1);}
+function:		exp EQUAL END         { printf("line -> exp EQUAL END"); printf("\t%f\n", $1);}
 			;
 
 exp:		NUMBER                { printf("exp -> NUMBER\n"); $$ = $1; }
