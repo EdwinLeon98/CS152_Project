@@ -59,4 +59,5 @@ beginbody	## main program
        endif;
        i := i + 1;
    endloop;
+   return i+i;
 endbody

@@ -45,7 +45,7 @@ beginbody	## main program
 	       j := i+i;
 	       while j <= n beginloop
 		       a[j] := 1;
-		       j := j+i
+		       j := j+i;
 	       endloop;
        endif;
        i := i + 1;

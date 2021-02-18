@@ -39,13 +39,13 @@ funclocals: declaration SEMICOLON funclocals                            	{ print
             ;
 
 funcbody:   statement SEMICOLON END_BODY                                	{ printf("funcbody -> statement SEMICOLON END_BODY\n");}
-            | statement SEMICOLON funcbody                             		{ printf("funcbody -> statement SEMICOLON statement\n");}                         
+            | statement SEMICOLON funcbody                             		{ printf("funcbody -> statement SEMICOLON statement\n");}
+			| error															{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			;
 
-declaration: funcident														{ printf("declaration -> funcident\n");}
-            ;
-
-funcident:  IDENT COMMA funcident											{ printf("funcident -> IDENT COMMA funcident\n");}
-            | IDENT COLON array												{ printf("funcident -> IDENT COLON array\n");}
+declaration:  IDENT COMMA declaration										{ printf("declaration -> IDENT COMMA declaration\n");}
+            | IDENT COLON array												{ printf("declaration -> IDENT COLON array\n");}
+			| error															{ printf("Syntax error at line %d: invalid declaration\n", currLine); return 0;}
             ;
 
 array: 	    INTEGER															{ printf("array -> INTEGER\n");}
@@ -53,45 +53,37 @@ array: 	    INTEGER															{ printf("array -> INTEGER\n");}
             ;
 
 statement:  var ASSIGN expression											{ printf("statement -> var ASSIGN expression\n");}
-        	| if 															{ printf("statement -> if\n");}
-	    	| while															{ printf("statement -> while\n");}
-        	| dowhile														{ printf("statement -> dowhile\n");}
-	    	| read															{ printf("statement -> read\n");}
-	    	| write															{ printf("statement -> write\n");}
+        	| IF boolexpr THEN if 											{ printf("statement -> IF boolexpr THEN if\n");}
+	    	| WHILE boolexpr BEGINLOOP while								{ printf("statement -> WHILE boolexpr BEGINLOOP while\n");}
+        	| DO BEGINLOOP dowhile											{ printf("statement -> DO BEGINLOOP dowhile\n");}
+	    	| READ rwfunc													{ printf("statement -> READ rwfunc\n");}
+	    	| WRITE rwfunc													{ printf("statement -> WRITE rwfunc\n");}
+			| READ var														{ printf("statement -> READ rwfunc\n");}
+	    	| WRITE var														{ printf("statement -> WRITE rwfunc\n");}
 	    	| BREAK															{ printf("statement -> BREAK\n");}
 	    	| RETURN expression												{ printf("statement -> RETURN expression\n");}
+			| var error														{ printf("Syntax error at line %d: expecting \":=\"\n", currLine); return 0;}
         	;
 
-if:	    	IF boolexpr THEN statement SEMICOLON elsefunc					{ printf("if -> IF boolexpr THEN statement SEMICOLON elsefunc\n");}
+if:   		statement SEMICOLON if											{ printf("if -> statement SEMICOLON if\n");}
+	    	| ELSE statement SEMICOLON if									{ printf("if -> ELSE statement SEMICOLON if\n");}
+	    	| ENDIF															{ printf("if -> ENDIF\n");}
+			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 	    	;
 
-elsefunc:   statement SEMICOLON elsefunc									{ printf("elsefunc -> statement SEMICOLON elsefunc\n");}
-	    	| ELSE statement SEMICOLON elsefunc								{ printf("elsefunc -> ELSE statement SEMICOLON elsefunc\n");}
-	    	| ENDIF															{ printf("elsefunc -> ENDIF\n");}
+while:  	statement SEMICOLON while										{ printf("while -> statement SEMICOLON while\n");}
+	    	| ENDLOOP														{ printf("while -> ENDLOOP\n");}
+			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 	    	;
 
-while:	    WHILE boolexpr BEGINLOOP whilefunc								{ printf("while -> WHILE boolexpr BEGINLOOP whilefunc\n");}
-	    	;
-
-whilefunc:  statement SEMICOLON whilefunc									{ printf("whilefunc -> statement SEMICOLON whilefunc\n");}
-	    	| statement SEMICOLON ENDLOOP									{ printf("whilefunc -> statement SEMICOLON ENDLOOP\n");}
-	    	;
-
-dowhile:    DO BEGINLOOP dofunc												{ printf("dowhile -> DO BEGINLOOP dofunc\n");}
-	    	;
-
-dofunc:	    statement SEMICOLON dofunc										{ printf("dofunc -> statement SEMICOLON dofunc\n");}
-	    	| statement SEMICOLON ENDLOOP WHILE boolexpr					{ printf("dofunc -> statement SEMICOLON ENDLOOP WHILE boolexpr\n");}
-	    	;
-
-read:	    READ rwfunc														{ printf("read -> READ rwfunc\n");}
-	    	;
-
-write:	    WRITE rwfunc													{ printf("write -> WRITE rwfunc\n");}
+dowhile:	 statement SEMICOLON dowhile									{ printf("dowhile -> statement SEMICOLON dowhile\n");}
+	    	| ENDLOOP WHILE boolexpr										{ printf("dowhile -> ENDLOOP WHILE boolexpr\n");}
+			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 	    	;
 
 rwfunc:     var COMMA rwfunc												{ printf("rwfunc -> var COMMA rwfunc\n");}
-	    	| var															{ printf("rwfunc -> var\n");}
+			| var COMMA var													{ printf("rwfunc -> var COMMA rwfunc\n");}
+			| error															{ printf("Syntax error at line %d: expecting \",\"\n", currLine); return 0;}
  	    	;
 
 boolexpr:   relandexpr														{ printf("boolexpr -> relandexpr\n");}
@@ -174,5 +166,6 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *msg) {
+	
    printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }
