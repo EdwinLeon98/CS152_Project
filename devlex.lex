@@ -68,7 +68,6 @@ return 			            {printf("RETURN\n"); currPos += yyleng;} //Return keyword
 %%
   
 /*** Code Section ***/
-int yywrap() {}
 int main(int argc, char ** argv) {
     if(argc >= 2) {
         yyin = fopen(argv[1], "r");

@@ -1044,7 +1044,7 @@ YY_RULE_SETUP
 case 40:
 YY_RULE_SETUP
 #line 56 "862054277-862132870.lex"
-{ identCnt++; currPos += yyleng; return IDENT;}  //identifier
+{ identCnt++; currPos += yyleng; yylval.str = strdup(yytext); return IDENT;}  //identifier
 	YY_BREAK
 case 41:
 YY_RULE_SETUP

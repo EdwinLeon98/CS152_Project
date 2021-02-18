@@ -5,46 +5,56 @@
  extern int currLine;
  extern int currPos;
  FILE * yyin;
+ int yylex(void);
 %}
 
 %union{
   double dval;
   int ival;
+  char* str;
 }
 
 %error-verbose
 %start program
-%token IDENT SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN EQ NEQ LT GT LTE GTE SUB ADD MULT DIV MOD
+%token SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN EQ NEQ LT GT LTE GTE SUB ADD MULT DIV MOD
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY ARRAY OF IF THEN ENDIF ELSE WHILE DO BEGINLOOP ENDLOOP BREAK READ WRITE AND OR NOT TRUE FALSE RETURN
 %token <dval> NUMBER
 %token <ival> INTEGER
+%token <str> IDENT
 %left ADD SUB
 %left MULT DIV
 
 
 %% 
-program:	/* epsilon */
+program:	%empty
 			| function program                                          	{printf("program -> function program\n");}
 			;
 
-function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams            	{ printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS\n");}
+function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams            	{ printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS\n"); free($2);}
 			;
 
 funcparams: declaration SEMICOLON funcparams                            	{ printf("funcparams -> declaration SEMICOLON funcparams\n");}
             | END_PARAMS BEGIN_LOCALS funclocals                        	{ printf("funcparams -> END_PARAMS BEGIN_LOCALS funclocals\n");}
+			| declaration error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| error															{ printf("Syntax error at line %d: expecting \"endparams\"\n", currLine); return 0;}
+			| END_PARAMS error												{ printf("Syntax error at line %d: expecting \"beginlocals\"\n", currLine); return 0;}
             ;
 
 funclocals: declaration SEMICOLON funclocals                            	{ printf("funclocals -> declaration SEMICOLON funclocals\n");}
             | END_LOCALS BEGIN_BODY funcbody                            	{ printf("funclocals -> END_LOCALS BEGIN_BODY funcbody\n");}
+			| declaration error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| error															{ printf("Syntax error at line %d: expecting \"endlocals\"\n", currLine); return 0;}
+			| END_LOCALS error												{ printf("Syntax error at line %d: expecting \"beginbody\"\n", currLine); return 0;}
             ;
 
 funcbody:   statement SEMICOLON END_BODY                                	{ printf("funcbody -> statement SEMICOLON END_BODY\n");}
             | statement SEMICOLON funcbody                             		{ printf("funcbody -> statement SEMICOLON statement\n");}
-			| error															{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| statement SEMICOLON error										{ printf("Syntax error at line %d: expecting \"endbody\"\n", currLine); return 0;}
 			;
 
-declaration:  IDENT COMMA declaration										{ printf("declaration -> IDENT COMMA declaration\n");}
-            | IDENT COLON array												{ printf("declaration -> IDENT COLON array\n");}
+declaration:  IDENT COMMA declaration										{ printf("declaration -> IDENT COMMA declaration\n"); free($1);}
+            | IDENT COLON array												{ printf("declaration -> IDENT COLON array\n"); free($1);}
 			| error															{ printf("Syntax error at line %d: invalid declaration\n", currLine); return 0;}
             ;
 
@@ -58,8 +68,8 @@ statement:  var ASSIGN expression											{ printf("statement -> var ASSIGN ex
         	| DO BEGINLOOP dowhile											{ printf("statement -> DO BEGINLOOP dowhile\n");}
 	    	| READ rwfunc													{ printf("statement -> READ rwfunc\n");}
 	    	| WRITE rwfunc													{ printf("statement -> WRITE rwfunc\n");}
-			| READ var														{ printf("statement -> READ rwfunc\n");}
-	    	| WRITE var														{ printf("statement -> WRITE rwfunc\n");}
+			| READ var														{ printf("statement -> READ var\n");}
+	    	| WRITE var														{ printf("statement -> WRITE var\n");}
 	    	| BREAK															{ printf("statement -> BREAK\n");}
 	    	| RETURN expression												{ printf("statement -> RETURN expression\n");}
 			| var error														{ printf("Syntax error at line %d: expecting \":=\"\n", currLine); return 0;}
@@ -69,16 +79,20 @@ if:   		statement SEMICOLON if											{ printf("if -> statement SEMICOLON if\
 	    	| ELSE statement SEMICOLON if									{ printf("if -> ELSE statement SEMICOLON if\n");}
 	    	| ENDIF															{ printf("if -> ENDIF\n");}
 			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| error															{ printf("Syntax error at line %d: expecting \"else or endif\"\n", currLine); return 0;}
 	    	;
 
 while:  	statement SEMICOLON while										{ printf("while -> statement SEMICOLON while\n");}
 	    	| ENDLOOP														{ printf("while -> ENDLOOP\n");}
 			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| error															{ printf("Syntax error at line %d: expecting \"endloop\"\n", currLine); return 0;}
 	    	;
 
 dowhile:	 statement SEMICOLON dowhile									{ printf("dowhile -> statement SEMICOLON dowhile\n");}
 	    	| ENDLOOP WHILE boolexpr										{ printf("dowhile -> ENDLOOP WHILE boolexpr\n");}
 			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| error															{ printf("Syntax error at line %d: expecting \"endloop\"\n", currLine); return 0;}
+			| ENDLOOP error													{ printf("Syntax error at line %d: expecting \"while\"\n", currLine); return 0;}
 	    	;
 
 rwfunc:     var COMMA rwfunc												{ printf("rwfunc -> var COMMA rwfunc\n");}
@@ -118,6 +132,7 @@ comp: 	    EQ																{ printf("comp -> EQ\n");}
 	    	| GT															{ printf("comp -> GT\n");}
 	    	| LTE															{ printf("comp -> LTE\n");}
         	| GTE															{ printf("comp -> GTE\n");}
+			| error															{ printf("Syntax error at line %d: expecting \"comparison operator\"\n", currLine); return 0;}
 	    	;
 
 expression: multexpr														{ printf("expression -> multexpr\n");}
@@ -141,16 +156,16 @@ term1: 	    var																{ printf("term1 -> var\n");}
 	    	| L_PAREN expression R_PAREN									{ printf("term1 -> L_PAREN expression R_PAREN\n");}
 	 		;
 
-term2:      IDENT L_PAREN term3 R_PAREN										{ printf("term2 -> IDENT L_PAREN term3 R_PAREN\n");}
+term2:      IDENT L_PAREN term3 R_PAREN										{ printf("term2 -> IDENT L_PAREN term3 R_PAREN\n"); free($1);}
 	    	;
 
-term3:	     /* epsilon */
+term3:	    %empty
 	    	| expression													{ printf("term3 -> expression\n");}
 	    	| expression COMMA term3										{ printf("term3 -> expression COMMA term3\n");}
 	    	; 
 
-var: 		IDENT															{ printf("var -> IDENT\n");}
-	    	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET			{ printf("var -> IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n");}
+var: 		IDENT															{ printf("var -> IDENT %s\n", $1); free($1);}
+	    	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET			{ printf("var -> IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n"); free($1);}
      		;
 %%
 
@@ -162,10 +177,11 @@ int main(int argc, char **argv) {
       }//end if
    }//end if
    yyparse(); // Calls yylex() for tokens.
+   fclose(yyin);
    return 0;
 }
 
 void yyerror(const char *msg) {
 	
-   printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
+	printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }

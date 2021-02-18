@@ -6,5 +6,5 @@ a : integer;
 endlocals
 beginbody
 a := 1 + 2 * 3;
-break
+break;
 endbody

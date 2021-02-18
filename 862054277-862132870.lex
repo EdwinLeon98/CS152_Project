@@ -53,7 +53,7 @@ return 			            { currPos += yyleng; return RETURN;} //Return keyword
 
 {} // Numbers and Identifiers
 [0-9]+ 				                    { currPos += yyleng; return NUMBER;} //number
-[a-zA-Z]([a-zA-Z0-9_]+[a-zA-Z0-9]+)?    { identCnt++; currPos += yyleng; return IDENT;}  //identifier
+[a-zA-Z]([a-zA-Z0-9_]+[a-zA-Z0-9]+)?    { identCnt++; currPos += yyleng; yylval.str = strdup(yytext); return IDENT;}  //identifier
 [0-9]+[a-zA-Z_]+([a-zA-Z0-9]+)?          {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter", currLine, currPos, yytext); return 0;}  //invalid identifier #1
 [a-zA-Z]([a-zA-Z0-9_]+?)_+              {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
 

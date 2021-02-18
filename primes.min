@@ -47,6 +47,7 @@ beginbody	## main program
 		       a[j] := 1;
 		       j := j+i;
 	       endloop;
+       else z := 1;
        endif;
        i := i + 1;
     endloop;
