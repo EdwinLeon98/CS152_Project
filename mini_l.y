@@ -35,7 +35,6 @@ function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams			    { printf("funct
 			| FUNCTION IDENT SEMICOLON error			    				{ printf("Syntax error at line %d: expecting \"beginparams\"\n", currLine); return 0;}
 			| FUNCTION IDENT error			    							{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 			| FUNCTION error			    								{ printf("Syntax error at line %d: expecting \"identifier\"\n", currLine); return 0;}
-			| error			    											{ printf("Syntax error at line %d: expecting \"function\"\n", currLine); return 0;}
 			;
 
 funcparams: declaration SEMICOLON funcparams                            	{ printf("funcparams -> declaration SEMICOLON funcparams\n");}
