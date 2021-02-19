@@ -10,6 +10,10 @@
 
 function main;
 beginparams
+n : integer;
+a : array[1000] of integer;	## prime candidates array
+i, j : integer;
+x, sqrt_n : integer;
 endparams
 
 beginlocals
@@ -56,7 +60,7 @@ beginbody	## main program
     i := 2;
     while i <= n beginloop
 	    if a[i] == 0 then
-	       write i;
+	       write i,y,t;
        endif;
        i := i + 1;
    endloop;

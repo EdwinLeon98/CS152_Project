@@ -25,18 +25,24 @@
 %left MULT DIV
 
 
-%% 
+%%
 program:	%empty															{printf("program -> epsilon\n");}
 			| function program                                          	{printf("program -> function program\n");}
 			;
 
-function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams            	{ printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS\n"); free($2);}
+function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams			    { printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS\n"); free($2);}
+			| FUNCTION IDENT SEMICOLON BEGIN_PARAMS error			    	{ printf("Syntax error at line %d: expecting \"declaration or endparams\"\n", currLine); return 0;}
+			| FUNCTION IDENT SEMICOLON error			    				{ printf("Syntax error at line %d: expecting \"beginparams\"\n", currLine); return 0;}
+			| FUNCTION IDENT error			    							{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
+			| FUNCTION error			    								{ printf("Syntax error at line %d: expecting \"identifier\"\n", currLine); return 0;}
+			| error			    											{ printf("Syntax error at line %d: expecting \"function\"\n", currLine); return 0;}
 			;
 
 funcparams: declaration SEMICOLON funcparams                            	{ printf("funcparams -> declaration SEMICOLON funcparams\n");}
             | END_PARAMS BEGIN_LOCALS funclocals                        	{ printf("funcparams -> END_PARAMS BEGIN_LOCALS funclocals\n");}
 			| declaration error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 			| END_PARAMS error												{ printf("Syntax error at line %d: expecting \"beginlocals\"\n", currLine); return 0;}
+			| END_PARAMS BEGIN_LOCALS error									{ printf("Syntax error at line %d: expecting \"declaration or endlocals\"\n", currLine); return 0;}
             ;
 
 funclocals: declaration SEMICOLON funclocals                            	{ printf("funclocals -> declaration SEMICOLON funclocals\n");}
@@ -47,12 +53,14 @@ funclocals: declaration SEMICOLON funclocals                            	{ print
 
 funcbody:   statement SEMICOLON END_BODY                                	{ printf("funcbody -> statement SEMICOLON END_BODY\n");}
             | statement SEMICOLON funcbody                             		{ printf("funcbody -> statement SEMICOLON statement\n");}
+			| statement SEMICOLON error										{ printf("Syntax error at line %d: expecting \"statement or endbody\"\n", currLine); return 0;}
 			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 			;
 
 declaration:  IDENT COMMA declaration										{ printf("declaration -> IDENT COMMA declaration\n"); free($1);}
             | IDENT COLON array												{ printf("declaration -> IDENT COLON array\n"); free($1);}
-			| error															{ printf("Syntax error at line %d: invalid declaration\n", currLine); return 0;}
+			| IDENT error													{ printf("Syntax error at line %d: invalid declaration\n", currLine); return 0;}
+			| error															{ printf("Syntax error at line %d: expecting \"identifier, endparams, or endlocals\"\n", currLine); return 0;}
             ;
 
 array: 	    INTEGER															{ printf("array -> INTEGER\n");}
@@ -70,9 +78,15 @@ statement:  var ASSIGN expression											{ printf("statement -> var ASSIGN ex
 	    	| BREAK															{ printf("statement -> BREAK\n");}
 	    	| RETURN expression												{ printf("statement -> RETURN expression\n");}
 			| var error														{ printf("Syntax error at line %d: expecting \":=\"\n", currLine); return 0;}
+			| var ASSIGN error												{ printf("Syntax error at line %d: expecting \"expression\"\n", currLine); return 0;}
 			| IF boolexpr error												{ printf("Syntax error at line %d: expecting \"then\"\n", currLine); return 0;}
 			| WHILE boolexpr error											{ printf("Syntax error at line %d: expecting \"beginloop\"\n", currLine); return 0;}
+			| WHILE boolexpr BEGINLOOP error								{ printf("Syntax error at line %d: \"invalid statement\"\n", currLine); return 0;}
 			| DO error														{ printf("Syntax error at line %d: expecting \"beginloop\"\n", currLine); return 0;}
+			| READ error													{ printf("Syntax error at line %d: \"invalid read\"\n", currLine); return 0;}
+			| WRITE error													{ printf("Syntax error at line %d: \"invalid write\"\n", currLine); return 0;}
+			| RETURN error													{ printf("Syntax error at line %d: expecting \"return expression\"\n", currLine); return 0;}
+			| WHILE error													{ printf("Syntax error at line %d: expecting \"while loop condition\"\n", currLine); return 0;}
         	;
 
 if:   		statement SEMICOLON if											{ printf("if -> statement SEMICOLON if\n");}
@@ -85,7 +99,7 @@ if:   		statement SEMICOLON if											{ printf("if -> statement SEMICOLON if\
 while:  	statement SEMICOLON while										{ printf("while -> statement SEMICOLON while\n");}
 	    	| ENDLOOP														{ printf("while -> ENDLOOP\n");}
 			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
-			| error															{ printf("Syntax error at line %d: expecting \"endloop\"\n", currLine); return 0;}
+			| statement SEMICOLON error										{ printf("Syntax error at line %d: expecting \"statement or endloop\"\n", currLine); return 0;}
 	    	;
 
 dowhile:	 statement SEMICOLON dowhile									{ printf("dowhile -> statement SEMICOLON dowhile\n");}
@@ -93,11 +107,11 @@ dowhile:	 statement SEMICOLON dowhile									{ printf("dowhile -> statement SEM
 			| statement error												{ printf("Syntax error at line %d: expecting \";\"\n", currLine); return 0;}
 			| error															{ printf("Syntax error at line %d: expecting \"endloop\"\n", currLine); return 0;}
 			| ENDLOOP error													{ printf("Syntax error at line %d: expecting \"while\"\n", currLine); return 0;}
+			| ENDLOOP WHILE error											{ printf("Syntax error at line %d: expecting \"boolean expression\"\n", currLine); return 0;}
 	    	;
 
 rwfunc:     var COMMA rwfunc												{ printf("rwfunc -> var COMMA rwfunc\n");}
 			| var COMMA var													{ printf("rwfunc -> var COMMA rwfunc\n");}
-			| error															{ printf("Syntax error at line %d: expecting \",\"\n", currLine); return 0;}
  	    	;
 
 boolexpr:   relandexpr														{ printf("boolexpr -> relandexpr\n");}
@@ -124,6 +138,7 @@ relexpr2:   expression comp expression										{ printf("relexpr2 -> expression
 	    	| TRUE															{ printf("relexpr2 -> TRUE\n");}
 	    	| FALSE															{ printf("relexpr2 -> FALSE\n");}
 	    	| L_PAREN boolexpr R_PAREN										{ printf("relexpr2 -> L_PAREN boolexpr R_PAREN\n");}
+			| expression error												{ printf("Syntax error at line %d: expecting \"comparison operator\"\n", currLine); return 0;}
 	    	;
 
 comp: 	    EQ																{ printf("comp -> EQ\n");}
