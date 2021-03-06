@@ -3,6 +3,7 @@
 #include "y.tab.h"
 int currLine = 1, currPos = 1;
 int identCnt = 0;
+int errLine = 1;
 %}
   
 /*** Rule Section ***/
@@ -71,6 +72,6 @@ return 			            { currPos += yyleng; return RETURN;} //Return keyword
 ##(.+)?                {currPos += yyleng;}
 [ \t]                  {currPos += yyleng;}
 \n                     {currLine++; currPos = 1;}
-.                      {printf("Error at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
+.                      {errLine = currLine; printf("Error at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
 
 %%

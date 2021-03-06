@@ -43,7 +43,7 @@ beginbody	## main program
 
     ## make the array
     i := 2;
-    while i <= sqrt_n beginloop
+    while i <= sqrt_n 
 	    if a[i] == 0 then
           ## i prime, so eliminate its multiples
 	       j := i+i;

@@ -564,9 +564,10 @@ char *yytext;
 #include "y.tab.h"
 int currLine = 1, currPos = 1;
 int identCnt = 0;
-#line 568 "lex.yy.c"
+int errLine = 1;
+#line 569 "lex.yy.c"
 /*** Rule Section ***/
-#line 570 "lex.yy.c"
+#line 571 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -783,10 +784,10 @@ YY_DECL
 		}
 
 	{
-#line 9 "862054277-862132870.lex"
+#line 10 "862054277-862132870.lex"
 
 
-#line 790 "lex.yy.c"
+#line 791 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -845,286 +846,286 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "862054277-862132870.lex"
+#line 12 "862054277-862132870.lex"
 { currPos += yyleng; return FUNCTION;} //Function keyword
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "862054277-862132870.lex"
+#line 13 "862054277-862132870.lex"
 { currPos += yyleng; return BEGIN_PARAMS;} //Beginparams keyword
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "862054277-862132870.lex"
+#line 14 "862054277-862132870.lex"
 { currPos += yyleng; return END_PARAMS;} //Endparams keyword
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "862054277-862132870.lex"
+#line 15 "862054277-862132870.lex"
 { currPos += yyleng; return BEGIN_LOCALS;} //Beginlocals keyword
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "862054277-862132870.lex"
+#line 16 "862054277-862132870.lex"
 { currPos += yyleng; return END_LOCALS;} //Endlocals keyword
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "862054277-862132870.lex"
+#line 17 "862054277-862132870.lex"
 { currPos += yyleng; return BEGIN_BODY;} //Beginbody keyword
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "862054277-862132870.lex"
+#line 18 "862054277-862132870.lex"
 { currPos += yyleng; return END_BODY;} //Endbody keyword
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "862054277-862132870.lex"
+#line 19 "862054277-862132870.lex"
 { currPos += yyleng; return INTEGER;} //Integer keyword
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "862054277-862132870.lex"
+#line 20 "862054277-862132870.lex"
 { currPos += yyleng; return ARRAY;} //Array keyword
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 20 "862054277-862132870.lex"
+#line 21 "862054277-862132870.lex"
 { currPos += yyleng; return OF;} //Of keyword
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "862054277-862132870.lex"
+#line 22 "862054277-862132870.lex"
 { currPos += yyleng; return IF;} //If keyword
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 22 "862054277-862132870.lex"
+#line 23 "862054277-862132870.lex"
 { currPos += yyleng; return THEN;} //Then keyword
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 23 "862054277-862132870.lex"
+#line 24 "862054277-862132870.lex"
 { currPos += yyleng; return ENDIF;} //Endif keyword
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 24 "862054277-862132870.lex"
+#line 25 "862054277-862132870.lex"
 { currPos += yyleng; return ELSE;} //Else keyword
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 25 "862054277-862132870.lex"
+#line 26 "862054277-862132870.lex"
 { currPos += yyleng; return WHILE;} //While keyword
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 26 "862054277-862132870.lex"
+#line 27 "862054277-862132870.lex"
 { currPos += yyleng; return DO;} //Do keyword
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 27 "862054277-862132870.lex"
+#line 28 "862054277-862132870.lex"
 { currPos += yyleng; return BEGINLOOP;} //Beginloop keyword
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 28 "862054277-862132870.lex"
+#line 29 "862054277-862132870.lex"
 { currPos += yyleng; return ENDLOOP;} //Endloop keyword
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 29 "862054277-862132870.lex"
+#line 30 "862054277-862132870.lex"
 { currPos += yyleng; return BREAK;} //Break keyword
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 30 "862054277-862132870.lex"
+#line 31 "862054277-862132870.lex"
 { currPos += yyleng; return READ;} //Read keyword
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 31 "862054277-862132870.lex"
+#line 32 "862054277-862132870.lex"
 { currPos += yyleng; return WRITE;} //Write keyword
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 32 "862054277-862132870.lex"
+#line 33 "862054277-862132870.lex"
 { currPos += yyleng; return AND;} //And keyword
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 33 "862054277-862132870.lex"
+#line 34 "862054277-862132870.lex"
 { currPos += yyleng; return OR;} //Or keyword
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 34 "862054277-862132870.lex"
+#line 35 "862054277-862132870.lex"
 { currPos += yyleng; return NOT;} //Not keyword
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 35 "862054277-862132870.lex"
+#line 36 "862054277-862132870.lex"
 { currPos += yyleng; return TRUE;} //True keyword
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 36 "862054277-862132870.lex"
+#line 37 "862054277-862132870.lex"
 { currPos += yyleng; return FALSE;} //False keyword
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 37 "862054277-862132870.lex"
+#line 38 "862054277-862132870.lex"
 { currPos += yyleng; return RETURN;} //Return keyword
 	YY_BREAK
 // Arithmetic Ops
 case 28:
 YY_RULE_SETUP
-#line 40 "862054277-862132870.lex"
+#line 41 "862054277-862132870.lex"
 { currPos += yyleng; return SUB;} //Subtraction
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 41 "862054277-862132870.lex"
+#line 42 "862054277-862132870.lex"
 { currPos += yyleng; return ADD;} //Addition
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 42 "862054277-862132870.lex"
+#line 43 "862054277-862132870.lex"
 { currPos += yyleng; return MULT;} //Multiplication
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 43 "862054277-862132870.lex"
+#line 44 "862054277-862132870.lex"
 { currPos += yyleng; return DIV;} //Division
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 44 "862054277-862132870.lex"
+#line 45 "862054277-862132870.lex"
 { currPos += yyleng; return MOD;} //Modulus
 	YY_BREAK
 // Comparison Ops
 case 33:
 YY_RULE_SETUP
-#line 47 "862054277-862132870.lex"
+#line 48 "862054277-862132870.lex"
 { currPos += yyleng; return EQ;} //Is equal to
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 48 "862054277-862132870.lex"
+#line 49 "862054277-862132870.lex"
 { currPos += yyleng; return NEQ;} //Not equal to
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 49 "862054277-862132870.lex"
+#line 50 "862054277-862132870.lex"
 { currPos += yyleng; return LT;} //Less than
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 50 "862054277-862132870.lex"
+#line 51 "862054277-862132870.lex"
 { currPos += yyleng; return GT;} //Greater than
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 51 "862054277-862132870.lex"
+#line 52 "862054277-862132870.lex"
 { currPos += yyleng; return LTE;} //Less than or equal to
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 52 "862054277-862132870.lex"
+#line 53 "862054277-862132870.lex"
 { currPos += yyleng; return GTE;} //Greater than or equal to
 	YY_BREAK
 // Numbers and Identifiers
 case 39:
 YY_RULE_SETUP
-#line 55 "862054277-862132870.lex"
+#line 56 "862054277-862132870.lex"
 { currPos += yyleng; return NUMBER;} //number
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 56 "862054277-862132870.lex"
+#line 57 "862054277-862132870.lex"
 { identCnt++; currPos += yyleng; yylval.str = strdup(yytext); return IDENT;}  //identifier
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 57 "862054277-862132870.lex"
+#line 58 "862054277-862132870.lex"
 {printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter", currLine, currPos, yytext); return 0;}  //invalid identifier #1
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 58 "862054277-862132870.lex"
+#line 59 "862054277-862132870.lex"
 {printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore", currLine, currPos, yytext); return 0;}  //invalid identifier #2
 	YY_BREAK
 // Special Symbols
 case 43:
 YY_RULE_SETUP
-#line 61 "862054277-862132870.lex"
+#line 62 "862054277-862132870.lex"
 { currPos += yyleng; return SEMICOLON;} //Semicolon symbol
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 62 "862054277-862132870.lex"
+#line 63 "862054277-862132870.lex"
 { currPos += yyleng; return COLON;} //Colon symbol
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 63 "862054277-862132870.lex"
+#line 64 "862054277-862132870.lex"
 { currPos += yyleng; return COMMA;} //Comma symbol
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 64 "862054277-862132870.lex"
+#line 65 "862054277-862132870.lex"
 { currPos += yyleng; return L_PAREN;} //Left parenthesis symbol
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 65 "862054277-862132870.lex"
+#line 66 "862054277-862132870.lex"
 { currPos += yyleng; return R_PAREN;} //Right parenthesis symbol
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 66 "862054277-862132870.lex"
+#line 67 "862054277-862132870.lex"
 { currPos += yyleng; return L_SQUARE_BRACKET;} //Left bracket symbol
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 67 "862054277-862132870.lex"
+#line 68 "862054277-862132870.lex"
 { currPos += yyleng; return R_SQUARE_BRACKET;} //Right bracket symbol
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 68 "862054277-862132870.lex"
+#line 69 "862054277-862132870.lex"
 { currPos += yyleng; return ASSIGN;} //Assignment symbol
 	YY_BREAK
 // Comments and Whitespaces - not to be outputted
 case 51:
 YY_RULE_SETUP
-#line 71 "862054277-862132870.lex"
+#line 72 "862054277-862132870.lex"
 {currPos += yyleng;}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 72 "862054277-862132870.lex"
+#line 73 "862054277-862132870.lex"
 {currPos += yyleng;}
 	YY_BREAK
 case 53:
 /* rule 53 can match eol */
 YY_RULE_SETUP
-#line 73 "862054277-862132870.lex"
+#line 74 "862054277-862132870.lex"
 {currLine++; currPos = 1;}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 74 "862054277-862132870.lex"
-{printf("Error at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
+#line 75 "862054277-862132870.lex"
+{errLine = currLine; printf("Error at line %d, column %d: unrecognized symbol \"%s\" ", currLine, currPos, yytext); return 0;} //unrecognized symbol
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 76 "862054277-862132870.lex"
+#line 77 "862054277-862132870.lex"
 ECHO;
 	YY_BREAK
-#line 1128 "lex.yy.c"
+#line 1129 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2129,5 +2130,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 76 "862054277-862132870.lex"
+#line 77 "862054277-862132870.lex"
 
