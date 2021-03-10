@@ -1040,12 +1040,12 @@ YY_RULE_SETUP
 case 39:
 YY_RULE_SETUP
 #line 56 "862054277-862132870.lex"
-{ currPos += yyleng; return NUMBER;} //number
+{ currPos += yyleng; yylval.expr_struct.name = strdup(yytext); char* c; yylval.expr_struct.value = strtol(yytext, &c, 10); yylval.expr_struct.tokentype = "number"; return NUMBER;} //number
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 57 "862054277-862132870.lex"
-{ identCnt++; currPos += yyleng; yylval.str = strdup(yytext); return IDENT;}  //identifier
+{ identCnt++; currPos += yyleng; yylval.var_struct.name = strdup(yytext); yylval.str = strdup(yytext); yylval.var_struct.tokentype = "variable"; return IDENT;}  //identifier
 	YY_BREAK
 case 41:
 YY_RULE_SETUP

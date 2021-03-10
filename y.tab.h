@@ -90,9 +90,9 @@ extern int yydebug;
     TRUE = 300,
     FALSE = 301,
     RETURN = 302,
-    NUMBER = 303,
-    INTEGER = 304,
-    IDENT = 305
+    INTEGER = 303,
+    IDENT = 304,
+    NUMBER = 305
   };
 #endif
 
@@ -101,13 +101,35 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 15 "mini_l.y" /* yacc.c:1909  */
+#line 19 "mini_l.y" /* yacc.c:1909  */
 
   double dval;
   int ival;
   char* str;
+  
+  struct VarStruct {
+	char* name;
+	char* tokentype;
+	char* ret_name;
+  } var_struct;
 
-#line 111 "y.tab.h" /* yacc.c:1909  */
+  struct ExprStruct {
+	char* name;
+	int value;
+	char* tokentype;
+	char* ret_name;
+	char* next;
+  } expr_struct;
+
+  struct RelExprStruct {
+	char* ret_name;
+  } relexpr_struct;
+
+  struct CompStruct {
+	char* name;
+  } comp_struct;
+
+#line 133 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

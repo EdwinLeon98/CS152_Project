@@ -1,6 +1,7 @@
 %{
  #include <stdio.h>
  #include <stdlib.h>
+ #include <string.h>
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
@@ -8,34 +9,69 @@
  FILE * yyin;
  int yylex(void);
  int errors[1000];
- int errInd = 0;
- int tmp = 0;
+ int errInd=0;
+ int tmp=0;
+ char code[10000][254];
+ int tmp2=0;
+ int temp=0;
 %}
 
 %union{
   double dval;
   int ival;
   char* str;
+  
+  struct VarStruct {
+	char* name;
+	char* tokentype;
+	char* ret_name;
+  } var_struct;
+
+  struct ExprStruct {
+	char* name;
+	int value;
+	char* tokentype;
+	char* ret_name;
+	char* next;
+  } expr_struct;
+
+  struct RelExprStruct {
+	char* ret_name;
+  } relexpr_struct;
+
+  struct CompStruct {
+	char* name;
+  } comp_struct;
 }
 
 %error-verbose
-%start program
+%start prog_start
 %token SEMICOLON COLON COMMA L_PAREN R_PAREN L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN EQ NEQ LT GT LTE GTE SUB ADD MULT DIV MOD
 %token FUNCTION BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY ARRAY OF IF THEN ENDIF ELSE WHILE DO BEGINLOOP ENDLOOP BREAK READ WRITE AND OR NOT TRUE FALSE RETURN
-%token <dval> NUMBER
 %token <ival> INTEGER
 %token <str> IDENT
 %left ADD SUB
 %left MULT DIV
+%type<var_struct> var;
+%token<expr_struct> NUMBER;
+%type<expr_struct> term1;
+%type<expr_struct> term;
+%type<expr_struct> multexpr;
+%type<expr_struct> expression;
+%type<relexpr_struct> relexpr2;
+%type<comp_struct> comp;
 
 
 %%
-program:	%empty															{printf("program -> epsilon\n");}
-			| function program                                          	{printf("program -> function program\n");}
+prog_start:	functions														{printf("prog_start -> functions\n");}
 			;
 
-function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams			    { printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS\n"); free($2);}
-			| FUNCTION IDENT SEMICOLON BEGIN_PARAMS error			    	{ printf("Syntax error at line %d: expecting \"declaration or endparams\"\n", errors[tmp]);}
+functions:	%empty															{printf("functions -> epsilon\n");}
+			| function functions                                          	{printf("functions -> function functions\n");}
+			;
+
+function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams			    { char c[] = "func "; strcat(c, $2); strcat(c, "\n"); strcpy(code[tmp2], c); tmp2++;}
+			| FUNCTION IDENT SEMICOLON BEGIN_PARAMS error			    	{ tmp--; printf("Syntax error at line %d: expecting \"declaration or endparams\"\n", errors[tmp]);}
 			| FUNCTION IDENT SEMICOLON error funcparams			    		{ tmp--; printf("Syntax error at line %d: expecting \"beginparams\"\n", errors[tmp]);}
 			| FUNCTION IDENT error BEGIN_PARAMS funcparams		    		{ tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]);}
 			| FUNCTION error SEMICOLON BEGIN_PARAMS funcparams				{ tmp--; printf("Syntax error at line %d: expecting \"identifier\"\n", errors[tmp]);}
@@ -62,8 +98,8 @@ funcbody:   statement SEMICOLON END_BODY                                	{ print
 			| statement error END_BODY										{ tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]);}
 			;
 
-declaration:  IDENT COMMA declaration										{ printf("declaration -> IDENT COMMA declaration\n"); free($1);}
-            | IDENT COLON array												{ printf("declaration -> IDENT COLON array\n"); free($1);}
+declaration:  IDENT COMMA declaration										{ char c[] = ". "; strcat(c, $1); strcat(c, "\n"); strcpy(code[tmp2], c); tmp2++;}
+            | IDENT COLON array												{ char c[] = ". "; strcat(c, $1); strcat(c, "\n"); strcpy(code[tmp2], c); tmp2++;}
 			| IDENT error													{ tmp--; printf("Syntax error at line %d: invalid declaration\n", errors[tmp]);}
 			| error															{ tmp--; printf("Syntax error at line %d: expecting \"identifier, endparams, or endlocals\"\n", errors[tmp]);}
             ;
@@ -72,7 +108,11 @@ array: 	    INTEGER															{ printf("array -> INTEGER\n");}
             | ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER		{ printf("array -> ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER\n");}
             ;
 
-statement:  var ASSIGN expression											{ printf("statement -> var ASSIGN expression\n");}
+statement:  var ASSIGN expression											{ char c1[254];
+																			  sprintf(c1, "= %s, %s\n", $1.name, $3.ret_name);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+																			}
         	| IF boolexpr THEN if 											{ printf("statement -> IF boolexpr THEN if\n");}
 	    	| WHILE boolexpr BEGINLOOP while								{ printf("statement -> WHILE boolexpr BEGINLOOP while\n");}
         	| DO BEGINLOOP dowhile											{ printf("statement -> DO BEGINLOOP dowhile\n");}
@@ -139,57 +179,99 @@ relandexpr2: AND relexpr relandexpr2										{ printf("relandexpr2 -> AND relex
 	    	| AND relexpr													{ printf("relandexpr2 -> AND relexpr\n");}
 	    	;
 
-relexpr:    NOT relexpr2													{ printf("relexpr -> NOT relexpr2\n");}
-	    	| relexpr2														{ printf("relexpr -> relexpr2\n");}
+relexpr:    NOT relexpr2													{  }
+	    	| relexpr2														{  }
 	    	;
 
-relexpr2:   expression comp expression										{ printf("relexpr2 -> expression comp expression\n");}
-	    	| TRUE															{ printf("relexpr2 -> TRUE\n");}
-	    	| FALSE															{ printf("relexpr2 -> FALSE\n");}
-	    	| L_PAREN boolexpr R_PAREN										{ printf("relexpr2 -> L_PAREN boolexpr R_PAREN\n");}
+relexpr2:   expression comp expression										{ char c1[254];
+																			  sprintf(c1, ". __temp%d__\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[254];
+																			  sprintf(c2, "%s __temp%d__, %s, %s\n", $2.name, temp, $1.ret_name, $3.ret_name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+
+																			  char c3[20];
+																			  sprintf(c3, "__temp%d__", temp);
+																			  $$.ret_name = c3;
+																			  temp++;
+																			}
+	    	| TRUE															{  }
+	    	| FALSE															{  }
+	    	| L_PAREN boolexpr R_PAREN										{  }
 			| expression error												{ tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]);}
 	    	;
 
-comp: 	    EQ																{ printf("comp -> EQ\n");}
-	    	| NEQ															{ printf("comp -> NEQ\n");}
-	    	| LT															{ printf("comp -> LT\n");}
-	    	| GT															{ printf("comp -> GT\n");}
-	    	| LTE															{ printf("comp -> LTE\n");}
-        	| GTE															{ printf("comp -> GTE\n");}
+comp: 	    EQ																{ $$.name = "=="; }
+	    	| NEQ															{ $$.name = "<>"; }
+	    	| LT															{ $$.name = "<"; }
+	    	| GT															{ $$.name = ">"; }
+	    	| LTE															{ $$.name = "<="; }
+        	| GTE															{ $$.name = ">="; }
 			| error															{ tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]);}
 	    	;
 
-expression: multexpr														{ printf("expression -> multexpr\n");}
-	    	| multexpr ADD expression										{ printf("expression -> multexpr ADD expression\n");}
-			| multexpr SUB expression										{ printf("expression -> multexpr SUB expression\n");}
+expression: multexpr														{  }
+	    	| multexpr ADD expression										{  }
+			| multexpr SUB expression										{  }
 	    	;
 
-multexpr: 	term															{ printf("multexpr -> term\n");}
-			| term MULT multexpr											{ printf("multexpr -> term MULT multexpr\n");}
-			| term DIV multexpr												{ printf("multexpr -> term DIV multexpr\n");}
-			| term MOD multexpr												{ printf("multexpr -> term MOD multexpr\n");}
+multexpr: 	term															{  }
+			| term MULT multexpr											{  }
+			| term DIV multexpr												{ char c1[254];
+																			  sprintf(c1, ". __temp%d__\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[254];
+																			  sprintf(c2, "/ __temp%d__, %s, %s\n", temp, $1.ret_name, $3.ret_name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+																			  
+																			  char c3[20];
+																			  sprintf(c3, "__temp%d__", temp);
+																			  $$.ret_name = c3;
+																			  temp++;
+																			}
+			| term MOD multexpr												{ }
 			;
 
-term:	    term1															{ printf("term -> term1\n");}
-	 		| SUB term1														{ printf("term -> SUB term1\n");}
-            | term2															{ printf("term -> term2\n");}
-	    	;									
+term:	    term1															{  }
+	 		| SUB term1														{ }
+            | term2															{ }
+	    	;								
 
-term1: 	    var																{ printf("term1 -> var\n");}
-	    	| NUMBER														{ printf("term1 -> NUMBER\n");}
-	    	| L_PAREN expression R_PAREN									{ printf("term1 -> L_PAREN expression R_PAREN\n");}
+term1: 	    var																{ char c1[254];
+																			  sprintf(c1, ". __temp%d__\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[254];
+																			  sprintf(c2, "= __temp%d__, %s\n", temp, $1.name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+
+																			  char c3[20];
+																			  sprintf(c3, "__temp%d__", temp);
+																			  $$.ret_name = strdup(c3);
+																			  temp++;
+																			}
+	    	| NUMBER														{ $$.name = $1.name; $$.value = $1.value; }
+	    	| L_PAREN expression R_PAREN									{ }
 	 		;
 
-term2:      IDENT L_PAREN term3 R_PAREN										{ printf("term2 -> IDENT L_PAREN term3 R_PAREN\n"); free($1);}
+term2:      IDENT L_PAREN term3 R_PAREN										{ }
 	    	;
 
-term3:	    %empty															{printf("program -> epsilon\n");}
-	    	| expression													{ printf("term3 -> expression\n");}
-	    	| expression COMMA term3										{ printf("term3 -> expression COMMA term3\n");}
+term3:	    %empty															{ }
+	    	| expression													{ }
+	    	| expression COMMA term3										{ }
 	    	; 
 
-var: 		IDENT															{ printf("var -> IDENT %s\n", $1); free($1);}
-	    	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET			{ printf("var -> IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET\n"); free($1);}
+var: 		IDENT															{  }
+	    	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET			{ char c[] = "=[] "; strcat(c, $1); strcat(c, "\n"); strcpy(code[tmp2], c); tmp2++;}
      		;
 %%
 
@@ -202,6 +284,9 @@ int main(int argc, char **argv) {
    }//end if
    yyparse(); // Calls yylex() for tokens.
    fclose(yyin);
+   for(int i = 0; i < 10000; i++) {
+   	  printf(code[i]);
+   }
    return 0;
 }
 
