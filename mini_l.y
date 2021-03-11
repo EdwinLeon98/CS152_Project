@@ -12,6 +12,7 @@
  int errInd=0;
  int tmp=0;
  char code[10000][254];
+ int top=0;
  int tmp2=0;
  int temp=0;
  int label=0;
@@ -24,6 +25,7 @@
  char called[10000][50];
  int calls[10000];
  int call=0;
+ int fCnt=0;
 %}
 
 %union{
@@ -83,7 +85,7 @@
   } statement_struct;
 
   struct FuncStruct {
-	  char* name;
+	  char name[80];
 	  int start;
 	  char* IR[254];
   } func_struct;
@@ -119,49 +121,70 @@
 %type<comp_struct> comp;
 %type<statement_struct> statement;
 %type<func_struct> function
-%type<functions_struct> functions
-%type<prog_struct> prog_start
+%type<func_struct> functions
+%type<func_struct> prog_start
 
 
 %%
-prog_start:	functions														{  }
+prog_start:	functions														{ 	char found = 0;
+																				printf("%d----------\n", d2);
+																				for(int i = 0; i < d2; i++) {
+																					printf("------------ %s\n", defined[i]);
+																					if(strcmp(defined[i], "main") == 0)	found = 1;
+																					printf("------------ %s\n", defined[i]);
+																			    }
+																				if(!found) printf("Error: no main function definition is given.\n");
+
+
+																			}
 			;
 
 functions:	%empty															{  }
 			| function functions                                          	{  }
 			;
 
-function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams			    { char c[] = "func ";
-																			  strcat(c, $2);
-																			  strcat(c, "\n");
-																			  $$.name = c;
-																			  tmp2++;
-																			  strcpy(defined[d2], $2);
-																			  d2++;
+function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams				{ 	char c[] = "func ";
+																				strcat(c, $2);
+																				strcat(c, "\n");
+																				strcpy($$.name, c);
+																				tmp2++;
+																				strcpy(defined[d2], $2);
+																				printf("------------ %s\n", defined[d2]);
+																				d2++;
 
-																			  for(int i = 0; i < call; i++) {
-																				  char found = 0;
-																				  for(int j = 0; j < d2; j++) {
-																					  if(strcmp(defined[j], called[i]) == 0) {
-																						  found = 1;
-																						  j = d2;
-																					  }
-																				  }
-																				  if(!found) printf("Error line %d: function \"%s\" called before definition.\n", calls[i], called[i]);
-																			  }
+																			  	for(int i = 0; i < call; i++) {
+																					char found = 0;
+																					for(int j = 0; j < d2; j++) {
+																						if(strcmp(defined[j], called[i]) == 0) {
+																							found = 1;
+																							j = d2;
+																						}
+																					}
+																					if(!found) printf("Error line %d: function \"%s\" called before definition.\n", calls[i], called[i]);
+																			  	}
 
-																			  for(int i = 0; i < 10000; i++) {
-																				  $$.IR[i] = strdup(code[i]);
-																			  }
+																				if(fCnt > 0) {
+																					for(int i = 10000; i > top; i--) {
+																						strcpy(code[i], code[i-1]);
+																					}
+																					strcpy(code[top], "endfunc\n\n");
 
-																			  printf($$.name);
-																			  for(int i = 0; i < 10000; i++) {
-																				  printf($$.IR[i]);
-																				  strcpy(code[i], "");
-																				  strcpy(declared[i], "");
-																			  }
-
-																			  printf("endfunc\n\n");
+																					for(int i = 10000; i > top+1; i--) {
+																						strcpy(code[i], code[i-1]);
+																					}
+																					strcpy(code[top+1], $$.name);
+																				}
+																				else {
+																					for(int i = 10000; i > top; i--) {
+																						strcpy(code[i], code[i-1]);
+																					}
+																					strcpy(code[top], $$.name);
+																				}
+																				for(int i = top; i < 10000; i++) {
+																					strcpy(declared[i], "");
+																				}
+																				top = tmp2;
+																				fCnt++;
 																			}
 			| FUNCTION IDENT SEMICOLON BEGIN_PARAMS error			    	{ tmp--; printf("Syntax error at line %d: expecting \"declaration or endparams\"\n", errors[tmp]); }
 			| FUNCTION IDENT SEMICOLON error funcparams			    		{ tmp--; printf("Syntax error at line %d: expecting \"beginparams\"\n", errors[tmp]); }
@@ -737,7 +760,10 @@ int main(int argc, char **argv) {
    }//end if
    yyparse(); // Calls yylex() for tokens.
    fclose(yyin);
-   
+   for(int i = 0; i < 10000; i++) {
+	   printf(code[i]);
+   }
+   printf("endfunc\n\n");
    return 0;
 }
 

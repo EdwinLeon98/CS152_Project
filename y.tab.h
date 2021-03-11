@@ -101,7 +101,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 29 "mini_l.y" /* yacc.c:1909  */
+#line 31 "mini_l.y" /* yacc.c:1909  */
 
   double dval;
   int ival;
@@ -159,7 +159,7 @@ union YYSTYPE
   } statement_struct;
 
   struct FuncStruct {
-	  char* name;
+	  char name[80];
 	  int start;
 	  char* IR[254];
   } func_struct;
