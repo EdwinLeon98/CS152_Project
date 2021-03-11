@@ -10,10 +10,6 @@
 
 function main;
 beginparams
-n : integer;
-a : array[1000] of integer;	## prime candidates array
-i, j : integer;
-x, sqrt_n : integer;
 endparams
 
 beginlocals
@@ -43,7 +39,7 @@ beginbody	## main program
 
     ## make the array
     i := 2;
-    while i <= sqrt_n 
+    while i <= sqrt_n beginloop
 	    if a[i] == 0 then
           ## i prime, so eliminate its multiples
 	       j := i+i;
@@ -51,7 +47,6 @@ beginbody	## main program
 		       a[j] := 1;
 		       j := j+i;
 	       endloop;
-       else z := 1;
        endif;
        i := i + 1;
     endloop;
@@ -60,9 +55,8 @@ beginbody	## main program
     i := 2;
     while i <= n beginloop
 	    if a[i] == 0 then
-	       write i,y,t;
+	       write i;
        endif;
        i := i + 1;
    endloop;
-   return i+i;
 endbody

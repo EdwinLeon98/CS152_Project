@@ -4,31 +4,16 @@ endparams
 
 beginlocals
 
-  n : integer;
-  i, j, k: integer;
-  t : array [20] of integer;
+  i: integer;
 
 endlocals
 
 beginbody	## main program
 
-  read i, j;
+  i := 40;
 
-  k := 0;
-  n := 20;
+  i := i*1000;
   
-  do 
-    beginloop
-      t[k] := k;
-      k := k + 1;
-      if k % 2 == 0 then
-        write t[k-1];
-      endif; 
-
-      if k >= n then
-        break;
-      endif;
-    endloop
-  while true;
+  write i;
 
 endbody
