@@ -4,6 +4,7 @@
 int currLine = 1, currPos = 1;
 int identCnt = 0;
 int errLine = 1;
+char defined[10000][100];
 %}
   
 /*** Rule Section ***/

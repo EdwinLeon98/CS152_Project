@@ -85,7 +85,7 @@
  int inLoop=0;
  char declared[10000][50];
  int d1=0;
- char defined[10000][50];
+ extern char defined[10000][100];
  int d2=0;
  char called[10000][50];
  int calls[10000];
@@ -574,18 +574,18 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   139,   139,   142,   143,   146,   192,   193,   194,   195,
-     198,   199,   200,   201,   202,   205,   206,   207,   208,   211,
-     212,   213,   214,   215,   216,   219,   255,   286,   317,   318,
-     321,   358,   383,   414,   415,   418,   430,   469,   522,   547,
-     548,   549,   554,   559,   564,   569,   570,   571,   572,   573,
-     574,   575,   576,   577,   578,   579,   580,   583,   584,   585,
-     589,   590,   593,   594,   595,   596,   597,   600,   601,   602,
-     603,   604,   605,   608,   617,   628,   631,   640,   651,   654,
-     655,   674,   675,   694,   713,   716,   733,   749,   765,   766,
-     769,   770,   771,   772,   773,   774,   775,   778,   779,   795,
-     813,   814,   830,   846,   864,   865,   892,   895,   920,   936,
-     939,   959,   960,   965,   968,   988
+       0,   139,   139,   142,   143,   146,   195,   196,   197,   198,
+     201,   202,   203,   204,   205,   208,   209,   210,   211,   214,
+     215,   216,   217,   218,   219,   222,   258,   289,   320,   321,
+     324,   361,   386,   417,   418,   421,   433,   472,   525,   550,
+     551,   552,   557,   562,   567,   572,   573,   574,   575,   576,
+     577,   578,   579,   580,   581,   582,   583,   586,   587,   588,
+     592,   593,   596,   597,   598,   599,   600,   603,   604,   605,
+     606,   607,   608,   611,   620,   631,   634,   643,   654,   657,
+     658,   677,   678,   697,   716,   719,   736,   752,   768,   769,
+     772,   773,   774,   775,   776,   777,   778,   781,   782,   798,
+     816,   817,   833,   849,   867,   868,   895,   898,   923,   939,
+     942,   962,   963,   968,   971,   991
 };
 #endif
 
@@ -1596,129 +1596,132 @@ yyreduce:
 																				}
 																				for(int i = top; i < 10000; i++) {
 																					strcpy(declared[i], "");
+																					strcpy(called[i], "");
 																				}
+																				d1 = 0;
+																				call = 0;
 																				top = tmp2;
 																				fCnt++;
 																			}
-#line 1604 "y.tab.c" /* yacc.c:1646  */
+#line 1607 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 192 "mini_l.y" /* yacc.c:1646  */
+#line 195 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"declaration or endparams\"\n", errors[tmp]); }
-#line 1610 "y.tab.c" /* yacc.c:1646  */
+#line 1613 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 193 "mini_l.y" /* yacc.c:1646  */
+#line 196 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginparams\"\n", errors[tmp]); }
-#line 1616 "y.tab.c" /* yacc.c:1646  */
+#line 1619 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 194 "mini_l.y" /* yacc.c:1646  */
+#line 197 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1622 "y.tab.c" /* yacc.c:1646  */
+#line 1625 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 195 "mini_l.y" /* yacc.c:1646  */
+#line 198 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"identifier\"\n", errors[tmp]); }
-#line 1628 "y.tab.c" /* yacc.c:1646  */
+#line 1631 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 198 "mini_l.y" /* yacc.c:1646  */
+#line 201 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1634 "y.tab.c" /* yacc.c:1646  */
+#line 1637 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 199 "mini_l.y" /* yacc.c:1646  */
+#line 202 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1640 "y.tab.c" /* yacc.c:1646  */
+#line 1643 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 200 "mini_l.y" /* yacc.c:1646  */
+#line 203 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1646 "y.tab.c" /* yacc.c:1646  */
+#line 1649 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 201 "mini_l.y" /* yacc.c:1646  */
+#line 204 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginlocals\"\n", errors[tmp]); }
-#line 1652 "y.tab.c" /* yacc.c:1646  */
+#line 1655 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 202 "mini_l.y" /* yacc.c:1646  */
+#line 205 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"declaration or endlocals\"\n", errors[tmp]); }
-#line 1658 "y.tab.c" /* yacc.c:1646  */
+#line 1661 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 205 "mini_l.y" /* yacc.c:1646  */
+#line 208 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1664 "y.tab.c" /* yacc.c:1646  */
+#line 1667 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 206 "mini_l.y" /* yacc.c:1646  */
+#line 209 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1670 "y.tab.c" /* yacc.c:1646  */
+#line 1673 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 207 "mini_l.y" /* yacc.c:1646  */
+#line 210 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1676 "y.tab.c" /* yacc.c:1646  */
+#line 1679 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 208 "mini_l.y" /* yacc.c:1646  */
+#line 211 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginbody\"\n", errors[tmp]); }
-#line 1682 "y.tab.c" /* yacc.c:1646  */
+#line 1685 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 211 "mini_l.y" /* yacc.c:1646  */
+#line 214 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1688 "y.tab.c" /* yacc.c:1646  */
+#line 1691 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 212 "mini_l.y" /* yacc.c:1646  */
+#line 215 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1694 "y.tab.c" /* yacc.c:1646  */
+#line 1697 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 213 "mini_l.y" /* yacc.c:1646  */
+#line 216 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endbody\"\n", errors[tmp]); }
-#line 1700 "y.tab.c" /* yacc.c:1646  */
+#line 1703 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 214 "mini_l.y" /* yacc.c:1646  */
+#line 217 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1706 "y.tab.c" /* yacc.c:1646  */
+#line 1709 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 215 "mini_l.y" /* yacc.c:1646  */
+#line 218 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement\"\n", errors[tmp]); }
-#line 1712 "y.tab.c" /* yacc.c:1646  */
+#line 1715 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 216 "mini_l.y" /* yacc.c:1646  */
+#line 219 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1718 "y.tab.c" /* yacc.c:1646  */
+#line 1721 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 219 "mini_l.y" /* yacc.c:1646  */
+#line 222 "mini_l.y" /* yacc.c:1646  */
     { 	
 																				for(int i = 0; i < d1; i++) {
 																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
@@ -1755,11 +1758,11 @@ yyreduce:
 																				(yyval.decl_struct).size = (yyvsp[0].decl_struct).size;
 																			  	tmp2++;
 																			}
-#line 1759 "y.tab.c" /* yacc.c:1646  */
+#line 1762 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 255 "mini_l.y" /* yacc.c:1646  */
+#line 258 "mini_l.y" /* yacc.c:1646  */
     {	for(int i = 0; i < d1; i++) {
 																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
 																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
@@ -1791,11 +1794,11 @@ yyreduce:
 																				strcpy((yyval.decl_struct).type, "var");
 																				tmp2++;
 																			}
-#line 1795 "y.tab.c" /* yacc.c:1646  */
+#line 1798 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 286 "mini_l.y" /* yacc.c:1646  */
+#line 289 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = 0; i < d1; i++) {
 																								if(strcmp(declared[i], (yyvsp[-7].str)) == 0) {
 																									printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-7].str));
@@ -1827,23 +1830,23 @@ yyreduce:
 																							(yyval.decl_struct).size = (yyvsp[-3].expr_struct).value;
 																			  			  	tmp2++;
 																						}
-#line 1831 "y.tab.c" /* yacc.c:1646  */
+#line 1834 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 317 "mini_l.y" /* yacc.c:1646  */
+#line 320 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: invalid declaration\n", errors[tmp]); }
-#line 1837 "y.tab.c" /* yacc.c:1646  */
+#line 1840 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 318 "mini_l.y" /* yacc.c:1646  */
+#line 321 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"identifier, endparams, or endlocals\"\n", errors[tmp]); }
-#line 1843 "y.tab.c" /* yacc.c:1646  */
+#line 1846 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 321 "mini_l.y" /* yacc.c:1646  */
+#line 324 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = 0; i < d1; i++) {
 																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
 																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
@@ -1881,11 +1884,11 @@ yyreduce:
 																				(yyval.decl_struct).size = (yyvsp[0].decl_struct).size;
 																			  	tmp2++;
 																			}
-#line 1885 "y.tab.c" /* yacc.c:1646  */
+#line 1888 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 358 "mini_l.y" /* yacc.c:1646  */
+#line 361 "mini_l.y" /* yacc.c:1646  */
     {	for(int i = 0; i < d1; i++) {
 																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
 																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
@@ -1911,11 +1914,11 @@ yyreduce:
 																				strcpy((yyval.decl_struct).type, "var");
 																				tmp2++;
 																			}
-#line 1915 "y.tab.c" /* yacc.c:1646  */
+#line 1918 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 383 "mini_l.y" /* yacc.c:1646  */
+#line 386 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = 0; i < d1; i++) {
 																								if(strcmp(declared[i], (yyvsp[-7].str)) == 0) {
 																									printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-7].str));
@@ -1947,23 +1950,23 @@ yyreduce:
 																							(yyval.decl_struct).size = (yyvsp[-3].expr_struct).value;
 																			  			  	tmp2++;
 																						}
-#line 1951 "y.tab.c" /* yacc.c:1646  */
+#line 1954 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 414 "mini_l.y" /* yacc.c:1646  */
+#line 417 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: invalid declaration\n", errors[tmp]); }
-#line 1957 "y.tab.c" /* yacc.c:1646  */
+#line 1960 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 415 "mini_l.y" /* yacc.c:1646  */
+#line 418 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"identifier, endparams, or endlocals\"\n", errors[tmp]); }
-#line 1963 "y.tab.c" /* yacc.c:1646  */
+#line 1966 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 418 "mini_l.y" /* yacc.c:1646  */
+#line 421 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  if(strcmp((yyvsp[-2].var_struct).type, "var") == 0) {
 																				sprintf(c1, "= %s, %s\n", (yyvsp[-2].var_struct).name, (yyvsp[0].expr_struct).ret_name);
@@ -1976,11 +1979,11 @@ yyreduce:
 																			  (yyval.statement_struct).stateStrt = (yyvsp[0].expr_struct).start;
 																			  tmp2++;
 																			}
-#line 1980 "y.tab.c" /* yacc.c:1646  */
+#line 1983 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 430 "mini_l.y" /* yacc.c:1646  */
+#line 433 "mini_l.y" /* yacc.c:1646  */
     { if((yyvsp[0].relexpr_struct).done) {
 																				
 																				char c0[200];
@@ -2020,11 +2023,11 @@ yyreduce:
 																			  (yyval.statement_struct).stateStrt = (yyvsp[-2].relexpr_struct).start;
 
 																			}
-#line 2024 "y.tab.c" /* yacc.c:1646  */
+#line 2027 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 469 "mini_l.y" /* yacc.c:1646  */
+#line 472 "mini_l.y" /* yacc.c:1646  */
     {  if(strcmp((yyvsp[-2].relexpr_struct).type, "nested") && (yyvsp[0].relexpr_struct).done) {
 																				for(int i = tmp2; i > (yyvsp[-2].relexpr_struct).end; i--) {
 																					strcpy(code[i], code[i-1]);
@@ -2078,11 +2081,11 @@ yyreduce:
 																			  tmp2++;
 																			  label++;
 																			}
-#line 2082 "y.tab.c" /* yacc.c:1646  */
+#line 2085 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 522 "mini_l.y" /* yacc.c:1646  */
+#line 525 "mini_l.y" /* yacc.c:1646  */
     { if((yyvsp[0].relexpr_struct).done) {
 
 																				for(int i = tmp2; i > (yyvsp[0].relexpr_struct).stateStrt; i--) {
@@ -2108,234 +2111,234 @@ yyreduce:
 																				label++;
 																			  }
 																			}
-#line 2112 "y.tab.c" /* yacc.c:1646  */
+#line 2115 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 547 "mini_l.y" /* yacc.c:1646  */
+#line 550 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2118 "y.tab.c" /* yacc.c:1646  */
+#line 2121 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 548 "mini_l.y" /* yacc.c:1646  */
+#line 551 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2124 "y.tab.c" /* yacc.c:1646  */
+#line 2127 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 549 "mini_l.y" /* yacc.c:1646  */
+#line 552 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".< %s\n", (yyvsp[0].var_struct).name);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2134 "y.tab.c" /* yacc.c:1646  */
+#line 2137 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 554 "mini_l.y" /* yacc.c:1646  */
+#line 557 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".> %s\n", (yyvsp[0].var_struct).name);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2144 "y.tab.c" /* yacc.c:1646  */
+#line 2147 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 559 "mini_l.y" /* yacc.c:1646  */
+#line 562 "mini_l.y" /* yacc.c:1646  */
     { if(!inLoop) {
 																				printf("Error line %d: break statement not within a loop.\n", currLine);
 																				error = 1;
 																			  }
 																			}
-#line 2154 "y.tab.c" /* yacc.c:1646  */
+#line 2157 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 564 "mini_l.y" /* yacc.c:1646  */
+#line 567 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, "ret __temp__%d\n", temp-1);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2164 "y.tab.c" /* yacc.c:1646  */
+#line 2167 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 569 "mini_l.y" /* yacc.c:1646  */
+#line 572 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \":=\"\n", errors[tmp]); }
-#line 2170 "y.tab.c" /* yacc.c:1646  */
+#line 2173 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 570 "mini_l.y" /* yacc.c:1646  */
+#line 573 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"expression\"\n", errors[tmp]); }
-#line 2176 "y.tab.c" /* yacc.c:1646  */
+#line 2179 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 571 "mini_l.y" /* yacc.c:1646  */
+#line 574 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"expression\"\n", errors[tmp]); }
-#line 2182 "y.tab.c" /* yacc.c:1646  */
+#line 2185 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 572 "mini_l.y" /* yacc.c:1646  */
+#line 575 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"then\"\n", errors[tmp]); }
-#line 2188 "y.tab.c" /* yacc.c:1646  */
+#line 2191 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 573 "mini_l.y" /* yacc.c:1646  */
+#line 576 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginloop\"\n", errors[tmp]); }
-#line 2194 "y.tab.c" /* yacc.c:1646  */
+#line 2197 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 574 "mini_l.y" /* yacc.c:1646  */
+#line 577 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid statement\"\n", errors[tmp]); }
-#line 2200 "y.tab.c" /* yacc.c:1646  */
+#line 2203 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 575 "mini_l.y" /* yacc.c:1646  */
+#line 578 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid statement\"\n", errors[tmp]); }
-#line 2206 "y.tab.c" /* yacc.c:1646  */
+#line 2209 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 576 "mini_l.y" /* yacc.c:1646  */
+#line 579 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginloop\"\n", errors[tmp]); }
-#line 2212 "y.tab.c" /* yacc.c:1646  */
+#line 2215 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 577 "mini_l.y" /* yacc.c:1646  */
+#line 580 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid read\"\n", errors[tmp]); }
-#line 2218 "y.tab.c" /* yacc.c:1646  */
+#line 2221 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 578 "mini_l.y" /* yacc.c:1646  */
+#line 581 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid write\"\n", errors[tmp]); }
-#line 2224 "y.tab.c" /* yacc.c:1646  */
+#line 2227 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 579 "mini_l.y" /* yacc.c:1646  */
+#line 582 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"return expression\"\n", errors[tmp]); }
-#line 2230 "y.tab.c" /* yacc.c:1646  */
+#line 2233 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 580 "mini_l.y" /* yacc.c:1646  */
+#line 583 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"while loop condition\"\n", errors[tmp]); }
-#line 2236 "y.tab.c" /* yacc.c:1646  */
+#line 2239 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 583 "mini_l.y" /* yacc.c:1646  */
+#line 586 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; (yyval.relexpr_struct).outside = (yyvsp[0].relexpr_struct).outside; (yyval.relexpr_struct).stateStrt = (yyvsp[-2].statement_struct).stateStrt; }
-#line 2242 "y.tab.c" /* yacc.c:1646  */
+#line 2245 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 584 "mini_l.y" /* yacc.c:1646  */
+#line 587 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2248 "y.tab.c" /* yacc.c:1646  */
+#line 2251 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 585 "mini_l.y" /* yacc.c:1646  */
+#line 588 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = 1;
 																			  (yyval.relexpr_struct).outside = tmp2;
 																			  tmp2++;
 																		    }
-#line 2257 "y.tab.c" /* yacc.c:1646  */
+#line 2260 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 589 "mini_l.y" /* yacc.c:1646  */
+#line 592 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 2263 "y.tab.c" /* yacc.c:1646  */
+#line 2266 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 590 "mini_l.y" /* yacc.c:1646  */
+#line 593 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"else or endif\"\n", errors[tmp]); }
-#line 2269 "y.tab.c" /* yacc.c:1646  */
+#line 2272 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 593 "mini_l.y" /* yacc.c:1646  */
+#line 596 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; }
-#line 2275 "y.tab.c" /* yacc.c:1646  */
+#line 2278 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 594 "mini_l.y" /* yacc.c:1646  */
+#line 597 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = 1; inLoop += 1; }
-#line 2281 "y.tab.c" /* yacc.c:1646  */
+#line 2284 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 595 "mini_l.y" /* yacc.c:1646  */
+#line 598 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 2287 "y.tab.c" /* yacc.c:1646  */
+#line 2290 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 596 "mini_l.y" /* yacc.c:1646  */
+#line 599 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endloop\"\n", errors[tmp]); }
-#line 2293 "y.tab.c" /* yacc.c:1646  */
+#line 2296 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 597 "mini_l.y" /* yacc.c:1646  */
+#line 600 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endloop\"\n", errors[tmp]); }
-#line 2299 "y.tab.c" /* yacc.c:1646  */
+#line 2302 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 600 "mini_l.y" /* yacc.c:1646  */
+#line 603 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; (yyval.relexpr_struct).stateStrt = (yyvsp[-2].statement_struct).stateStrt; strcpy((yyval.relexpr_struct).ret_name, (yyvsp[0].relexpr_struct).ret_name); }
-#line 2305 "y.tab.c" /* yacc.c:1646  */
+#line 2308 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 601 "mini_l.y" /* yacc.c:1646  */
+#line 604 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = 1; inLoop += 1; strcpy((yyval.relexpr_struct).ret_name, (yyvsp[0].relexpr_struct).ret_name); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = (yyvsp[0].relexpr_struct).end; }
-#line 2311 "y.tab.c" /* yacc.c:1646  */
+#line 2314 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 602 "mini_l.y" /* yacc.c:1646  */
+#line 605 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 2317 "y.tab.c" /* yacc.c:1646  */
+#line 2320 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 603 "mini_l.y" /* yacc.c:1646  */
+#line 606 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endloop\"\n", errors[tmp]); }
-#line 2323 "y.tab.c" /* yacc.c:1646  */
+#line 2326 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 604 "mini_l.y" /* yacc.c:1646  */
+#line 607 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"while\"\n", errors[tmp]); }
-#line 2329 "y.tab.c" /* yacc.c:1646  */
+#line 2332 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 605 "mini_l.y" /* yacc.c:1646  */
+#line 608 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"boolean expression\"\n", errors[tmp]); }
-#line 2335 "y.tab.c" /* yacc.c:1646  */
+#line 2338 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 608 "mini_l.y" /* yacc.c:1646  */
+#line 611 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = tmp2; i > (yyvsp[0].rw_struct).start; i--) {
 																					strcpy(code[i], code[i-1]);
 																			  	}
@@ -2345,11 +2348,11 @@ yyreduce:
 																			  	strcpy(code[(yyvsp[0].rw_struct).start], c);
 																			  	tmp2++;
 																			}
-#line 2349 "y.tab.c" /* yacc.c:1646  */
+#line 2352 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 617 "mini_l.y" /* yacc.c:1646  */
+#line 620 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".< %s\n", (yyvsp[-2].var_struct).name);
 																			  strcpy(code[tmp2], c1);
@@ -2361,17 +2364,17 @@ yyreduce:
 																			  strcpy(code[tmp2], c2);
 																			  tmp2++;
 																			}
-#line 2365 "y.tab.c" /* yacc.c:1646  */
+#line 2368 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 628 "mini_l.y" /* yacc.c:1646  */
+#line 631 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"var\"\n", errors[tmp]); }
-#line 2371 "y.tab.c" /* yacc.c:1646  */
+#line 2374 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 631 "mini_l.y" /* yacc.c:1646  */
+#line 634 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = tmp2; i > (yyvsp[0].rw_struct).start; i--) {
 																				strcpy(code[i], code[i-1]);
 																			}
@@ -2381,11 +2384,11 @@ yyreduce:
 																			strcpy(code[(yyvsp[0].rw_struct).start], c);
 																			tmp2++;
 																			}
-#line 2385 "y.tab.c" /* yacc.c:1646  */
+#line 2388 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 640 "mini_l.y" /* yacc.c:1646  */
+#line 643 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".> %s\n", (yyvsp[-2].var_struct).name);
 																			  strcpy(code[tmp2], c1);
@@ -2397,23 +2400,23 @@ yyreduce:
 																			  strcpy(code[tmp2], c2);
 																			  tmp2++;
 																			}
-#line 2401 "y.tab.c" /* yacc.c:1646  */
+#line 2404 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 651 "mini_l.y" /* yacc.c:1646  */
+#line 654 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"var\"\n", errors[tmp]); }
-#line 2407 "y.tab.c" /* yacc.c:1646  */
+#line 2410 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 654 "mini_l.y" /* yacc.c:1646  */
+#line 657 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
-#line 2413 "y.tab.c" /* yacc.c:1646  */
+#line 2416 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 655 "mini_l.y" /* yacc.c:1646  */
+#line 658 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2431,17 +2434,17 @@ yyreduce:
 																			  (yyval.relexpr_struct).start = (yyvsp[-2].relexpr_struct).start;
 																			  (yyval.relexpr_struct).end = tmp2;
 																			}
-#line 2435 "y.tab.c" /* yacc.c:1646  */
+#line 2438 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 674 "mini_l.y" /* yacc.c:1646  */
+#line 677 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
-#line 2441 "y.tab.c" /* yacc.c:1646  */
+#line 2444 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 675 "mini_l.y" /* yacc.c:1646  */
+#line 678 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2459,11 +2462,11 @@ yyreduce:
 																			  (yyval.relexpr_struct).start = (yyvsp[-2].relexpr_struct).start;
 																			  (yyval.relexpr_struct).end = tmp2;
 																			}
-#line 2463 "y.tab.c" /* yacc.c:1646  */
+#line 2466 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 694 "mini_l.y" /* yacc.c:1646  */
+#line 697 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2483,17 +2486,17 @@ yyreduce:
 																			  (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start;
 																			  (yyval.relexpr_struct).end = tmp2;
 																			}
-#line 2487 "y.tab.c" /* yacc.c:1646  */
+#line 2490 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 713 "mini_l.y" /* yacc.c:1646  */
+#line 716 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
-#line 2493 "y.tab.c" /* yacc.c:1646  */
+#line 2496 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 716 "mini_l.y" /* yacc.c:1646  */
+#line 719 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2511,11 +2514,11 @@ yyreduce:
 																			  (yyval.relexpr_struct).start = (yyvsp[-2].expr_struct).start;
 																			  (yyval.relexpr_struct).end = tmp2;
 																			}
-#line 2515 "y.tab.c" /* yacc.c:1646  */
+#line 2518 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 733 "mini_l.y" /* yacc.c:1646  */
+#line 736 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).start = tmp2;
 																			  char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
@@ -2532,11 +2535,11 @@ yyreduce:
 																			  strcpy((yyval.relexpr_struct).ret_name, c3);
 																			  temp++;
 																			}
-#line 2536 "y.tab.c" /* yacc.c:1646  */
+#line 2539 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 749 "mini_l.y" /* yacc.c:1646  */
+#line 752 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).start = tmp2;
 																			  char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
@@ -2553,71 +2556,71 @@ yyreduce:
 																			  strcpy((yyval.relexpr_struct).ret_name, c3);
 																			  temp++;
 																			}
-#line 2557 "y.tab.c" /* yacc.c:1646  */
+#line 2560 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 765 "mini_l.y" /* yacc.c:1646  */
+#line 768 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.relexpr_struct).ret_name, (yyvsp[-1].relexpr_struct).ret_name); strcpy((yyval.relexpr_struct).type, "nested"); (yyval.relexpr_struct).start = (yyvsp[-1].relexpr_struct).start; }
-#line 2563 "y.tab.c" /* yacc.c:1646  */
+#line 2566 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 766 "mini_l.y" /* yacc.c:1646  */
+#line 769 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]); }
-#line 2569 "y.tab.c" /* yacc.c:1646  */
+#line 2572 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 769 "mini_l.y" /* yacc.c:1646  */
+#line 772 "mini_l.y" /* yacc.c:1646  */
     { (yyval.comp_struct).name = "=="; }
-#line 2575 "y.tab.c" /* yacc.c:1646  */
+#line 2578 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 770 "mini_l.y" /* yacc.c:1646  */
+#line 773 "mini_l.y" /* yacc.c:1646  */
     { (yyval.comp_struct).name = "!="; }
-#line 2581 "y.tab.c" /* yacc.c:1646  */
+#line 2584 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 771 "mini_l.y" /* yacc.c:1646  */
+#line 774 "mini_l.y" /* yacc.c:1646  */
     { (yyval.comp_struct).name = "<"; }
-#line 2587 "y.tab.c" /* yacc.c:1646  */
+#line 2590 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 772 "mini_l.y" /* yacc.c:1646  */
+#line 775 "mini_l.y" /* yacc.c:1646  */
     { (yyval.comp_struct).name = ">"; }
-#line 2593 "y.tab.c" /* yacc.c:1646  */
+#line 2596 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 773 "mini_l.y" /* yacc.c:1646  */
+#line 776 "mini_l.y" /* yacc.c:1646  */
     { (yyval.comp_struct).name = "<="; }
-#line 2599 "y.tab.c" /* yacc.c:1646  */
+#line 2602 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 774 "mini_l.y" /* yacc.c:1646  */
+#line 777 "mini_l.y" /* yacc.c:1646  */
     { (yyval.comp_struct).name = ">="; }
-#line 2605 "y.tab.c" /* yacc.c:1646  */
+#line 2608 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 775 "mini_l.y" /* yacc.c:1646  */
+#line 778 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]); }
-#line 2611 "y.tab.c" /* yacc.c:1646  */
+#line 2614 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 778 "mini_l.y" /* yacc.c:1646  */
+#line 781 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2617 "y.tab.c" /* yacc.c:1646  */
+#line 2620 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 779 "mini_l.y" /* yacc.c:1646  */
+#line 782 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2634,11 +2637,11 @@ yyreduce:
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2638 "y.tab.c" /* yacc.c:1646  */
+#line 2641 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 795 "mini_l.y" /* yacc.c:1646  */
+#line 798 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2655,17 +2658,17 @@ yyreduce:
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2659 "y.tab.c" /* yacc.c:1646  */
+#line 2662 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 813 "mini_l.y" /* yacc.c:1646  */
+#line 816 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2665 "y.tab.c" /* yacc.c:1646  */
+#line 2668 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 814 "mini_l.y" /* yacc.c:1646  */
+#line 817 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2682,11 +2685,11 @@ yyreduce:
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2686 "y.tab.c" /* yacc.c:1646  */
+#line 2689 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 830 "mini_l.y" /* yacc.c:1646  */
+#line 833 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2703,11 +2706,11 @@ yyreduce:
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2707 "y.tab.c" /* yacc.c:1646  */
+#line 2710 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 846 "mini_l.y" /* yacc.c:1646  */
+#line 849 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2724,17 +2727,17 @@ yyreduce:
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2728 "y.tab.c" /* yacc.c:1646  */
+#line 2731 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 864 "mini_l.y" /* yacc.c:1646  */
+#line 867 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2734 "y.tab.c" /* yacc.c:1646  */
+#line 2737 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 865 "mini_l.y" /* yacc.c:1646  */
+#line 868 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2762,17 +2765,17 @@ yyreduce:
 																			  (yyval.expr_struct).start = (yyvsp[0].expr_struct).start;
 																			  strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type);
 																			}
-#line 2766 "y.tab.c" /* yacc.c:1646  */
+#line 2769 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 892 "mini_l.y" /* yacc.c:1646  */
+#line 895 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2772 "y.tab.c" /* yacc.c:1646  */
+#line 2775 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 895 "mini_l.y" /* yacc.c:1646  */
+#line 898 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2798,11 +2801,11 @@ yyreduce:
 																			  strcpy((yyval.expr_struct).type, (yyvsp[0].var_struct).type);
 																			  temp++;
 																			}
-#line 2802 "y.tab.c" /* yacc.c:1646  */
+#line 2805 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 920 "mini_l.y" /* yacc.c:1646  */
+#line 923 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2819,17 +2822,17 @@ yyreduce:
 																			  (yyval.expr_struct).value = (yyvsp[0].expr_struct).value;
 																			  temp++;
 																			}
-#line 2823 "y.tab.c" /* yacc.c:1646  */
+#line 2826 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 936 "mini_l.y" /* yacc.c:1646  */
+#line 939 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.expr_struct).ret_name, (yyvsp[-1].expr_struct).ret_name); }
-#line 2829 "y.tab.c" /* yacc.c:1646  */
+#line 2832 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 939 "mini_l.y" /* yacc.c:1646  */
+#line 942 "mini_l.y" /* yacc.c:1646  */
     { strcpy(called[call], (yyvsp[-3].str));
 																			  calls[call] = currLine;
 																			  call++;
@@ -2848,33 +2851,33 @@ yyreduce:
 																			  tmp2++;
 																			  temp++;
 																			}
-#line 2852 "y.tab.c" /* yacc.c:1646  */
+#line 2855 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 959 "mini_l.y" /* yacc.c:1646  */
+#line 962 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2858 "y.tab.c" /* yacc.c:1646  */
+#line 2861 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 960 "mini_l.y" /* yacc.c:1646  */
+#line 963 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, "param %s\n", (yyvsp[0].expr_struct).ret_name);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2868 "y.tab.c" /* yacc.c:1646  */
+#line 2871 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 965 "mini_l.y" /* yacc.c:1646  */
+#line 968 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2874 "y.tab.c" /* yacc.c:1646  */
+#line 2877 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 114:
-#line 968 "mini_l.y" /* yacc.c:1646  */
+#line 971 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.var_struct).type, "var");
 																			  char found = 0;
 																			  for(int i = 0; i < d1; i++) {
@@ -2895,11 +2898,11 @@ yyreduce:
 																					}
 																			  }
 																			}
-#line 2899 "y.tab.c" /* yacc.c:1646  */
+#line 2902 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 115:
-#line 988 "mini_l.y" /* yacc.c:1646  */
+#line 991 "mini_l.y" /* yacc.c:1646  */
     { strcpy((yyval.var_struct).type, "array");
 																			  strcpy((yyval.var_struct).ind_name, (yyvsp[-1].expr_struct).ret_name);
 																			  char found = 0;
@@ -2921,11 +2924,11 @@ yyreduce:
 																			  }
 																			  
 																			}
-#line 2925 "y.tab.c" /* yacc.c:1646  */
+#line 2928 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2929 "y.tab.c" /* yacc.c:1646  */
+#line 2932 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -3153,7 +3156,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1010 "mini_l.y" /* yacc.c:1906  */
+#line 1013 "mini_l.y" /* yacc.c:1906  */
 
 
 int main(int argc, char **argv) {
@@ -3171,10 +3174,15 @@ int main(int argc, char **argv) {
    }
    else if(error) return 0;
 
+   FILE *fp;
+   fp = fopen("mil_code.mil", "w+");
+
    for(int i = 0; i < 10000; i++) {
-	   printf(code[i]);
+	   fprintf(fp, code[i]);
    }
-   printf("endfunc\n\n");
+   fprintf(fp, "endfunc\n\n");
+   fclose(fp);
+
    return 0;
 }
 

@@ -17,7 +17,7 @@ beginbody	## main program
     i := i + 100;
   endif;
   j := j + 1;
-
+  
   write i;
 
 endbody

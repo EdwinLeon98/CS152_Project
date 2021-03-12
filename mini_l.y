@@ -20,7 +20,7 @@
  int inLoop=0;
  char declared[10000][50];
  int d1=0;
- char defined[10000][50];
+ extern char defined[10000][100];
  int d2=0;
  char called[10000][50];
  int calls[10000];
@@ -185,7 +185,10 @@ function:	FUNCTION IDENT SEMICOLON BEGIN_PARAMS funcparams				{ 	char c[] = "fun
 																				}
 																				for(int i = top; i < 10000; i++) {
 																					strcpy(declared[i], "");
+																					strcpy(called[i], "");
 																				}
+																				d1 = 0;
+																				call = 0;
 																				top = tmp2;
 																				fCnt++;
 																			}
@@ -1004,7 +1007,6 @@ var: 		IDENT															{ strcpy($$.type, "var");
 																				  		error = 1;
 																					}
 																			  }
-																			  
 																			}
      		;
 %%
@@ -1024,10 +1026,15 @@ int main(int argc, char **argv) {
    }
    else if(error) return 0;
 
+   FILE *fp;
+   fp = fopen("mil_code.mil", "w+");
+
    for(int i = 0; i < 10000; i++) {
-	   printf(code[i]);
+	   fprintf(fp, code[i]);
    }
-   printf("endfunc\n\n");
+   fprintf(fp, "endfunc\n\n");
+   fclose(fp);
+
    return 0;
 }
 
