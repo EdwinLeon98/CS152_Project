@@ -91,8 +91,14 @@
  int calls[10000];
  int call=0;
  int fCnt=0;
+ char hasMain=0;
+ char error=0;
+ char arrNames[10000][254];
+ int arr=0;
+ char varNames[10000][254];
+ int varInd=0;
 
-#line 96 "y.tab.c" /* yacc.c:339  */
+#line 102 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -183,7 +189,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 31 "mini_l.y" /* yacc.c:355  */
+#line 37 "mini_l.y" /* yacc.c:355  */
 
   double dval;
   int ival;
@@ -216,20 +222,21 @@ union YYSTYPE
 	char* name;
 	int value;
 	char* tokentype;
-	char* ret_name;
+	char ret_name[80];
 	char* next;
 	int start;
 	char type[20];
   } expr_struct;
 
   struct RelExprStruct {
-	char* ret_name;
+	char ret_name[80];
 	int start;
 	char inner[50];
 	char type[10];
 	int done;
 	int end;
 	int outside;
+	int stateStrt;
   } relexpr_struct;
 
   struct CompStruct {
@@ -238,6 +245,8 @@ union YYSTYPE
 
   struct StatementStruct {
 	char* IR[254];
+	int stateStrt;
+	char ret_name[80];
   } statement_struct;
 
   struct FuncStruct {
@@ -246,7 +255,7 @@ union YYSTYPE
 	  char* IR[254];
   } func_struct;
 
-#line 250 "y.tab.c" /* yacc.c:355  */
+#line 259 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -263,7 +272,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 267 "y.tab.c" /* yacc.c:358  */
+#line 276 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -505,16 +514,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  7
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   378
+#define YYLAST   401
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  51
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  29
+#define YYNNTS  27
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  119
+#define YYNRULES  115
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  224
+#define YYNSTATES  220
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -565,18 +574,18 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   129,   129,   142,   143,   146,   189,   190,   191,   192,
-     195,   196,   197,   198,   199,   202,   203,   204,   205,   208,
-     209,   210,   211,   212,   213,   216,   240,   258,   271,   272,
-     275,   298,   310,   323,   324,   327,   338,   376,   429,   430,
-     431,   432,   437,   442,   443,   448,   449,   450,   451,   452,
-     453,   454,   455,   456,   457,   458,   459,   462,   463,   464,
-     468,   469,   472,   473,   474,   475,   476,   479,   480,   481,
-     482,   483,   484,   487,   496,   507,   510,   519,   530,   533,
-     534,   537,   538,   541,   542,   545,   546,   549,   550,   553,
-     570,   571,   572,   573,   576,   577,   578,   579,   580,   581,
-     582,   585,   586,   602,   620,   621,   637,   653,   671,   672,
-     673,   676,   701,   717,   720,   740,   741,   746,   749,   750
+       0,   139,   139,   142,   143,   146,   192,   193,   194,   195,
+     198,   199,   200,   201,   202,   205,   206,   207,   208,   211,
+     212,   213,   214,   215,   216,   219,   255,   286,   317,   318,
+     321,   358,   383,   414,   415,   418,   430,   469,   522,   547,
+     548,   549,   554,   559,   564,   569,   570,   571,   572,   573,
+     574,   575,   576,   577,   578,   579,   580,   583,   584,   585,
+     589,   590,   593,   594,   595,   596,   597,   600,   601,   602,
+     603,   604,   605,   608,   617,   628,   631,   640,   651,   654,
+     655,   674,   675,   694,   713,   716,   733,   749,   765,   766,
+     769,   770,   771,   772,   773,   774,   775,   778,   779,   795,
+     813,   814,   830,   846,   864,   865,   892,   895,   920,   936,
+     939,   959,   960,   965,   968,   988
 };
 #endif
 
@@ -594,9 +603,9 @@ static const char *const yytname[] =
   "TRUE", "FALSE", "RETURN", "INTEGER", "IDENT", "NUMBER", "$accept",
   "prog_start", "functions", "function", "funcparams", "funclocals",
   "funcbody", "declaration1", "declaration2", "statement", "if", "while",
-  "dowhile", "rfunc", "wfunc", "boolexpr", "boolexpr2", "relandexpr",
-  "relandexpr2", "relexpr", "relexpr2", "comp", "expression", "multexpr",
-  "term", "term1", "term2", "term3", "var", YY_NULLPTR
+  "dowhile", "rfunc", "wfunc", "boolexpr", "relandexpr", "relexpr",
+  "relexpr2", "comp", "expression", "multexpr", "term", "term1", "term2",
+  "term3", "var", YY_NULLPTR
 };
 #endif
 
@@ -614,12 +623,12 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -135
+#define YYPACT_NINF -133
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-135)))
+  (!!((Yystate) == (-133)))
 
-#define YYTABLE_NINF -101
+#define YYTABLE_NINF -97
 
 #define yytable_value_is_error(Yytable_value) \
   0
@@ -628,29 +637,28 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-      21,    37,    34,  -135,    21,    28,   111,  -135,  -135,    82,
-      86,    31,     9,     9,     9,    17,  -135,    27,   211,  -135,
-     168,  -135,  -135,   187,  -135,    11,    29,  -135,   -12,    39,
-       9,     9,  -135,    12,   266,  -135,   192,    92,  -135,   107,
-    -135,  -135,  -135,  -135,   242,   242,  -135,    -2,    41,    11,
-      11,   242,    72,   133,   252,    58,     7,  -135,    62,    88,
-      18,   131,  -135,   219,    19,  -135,   155,  -135,  -135,  -135,
-    -135,  -135,   171,   170,   252,   181,   230,  -135,  -135,   278,
-    -135,    96,   164,   202,  -135,   362,     8,   165,  -135,  -135,
-    -135,   164,   109,   161,   161,  -135,  -135,   218,  -135,  -135,
-     247,  -135,   100,  -135,   100,   178,   193,   100,   115,   185,
-     223,  -135,   255,   354,  -135,  -135,   100,   142,   142,   252,
-    -135,   252,  -135,   117,  -135,  -135,  -135,  -135,  -135,  -135,
-     100,   100,   100,   100,   100,   100,  -135,   268,   210,  -135,
-      10,   284,  -135,  -135,    95,   112,   261,   286,  -135,  -135,
-     133,  -135,  -135,  -135,   134,  -135,   296,   245,  -135,  -135,
-     295,   303,  -135,  -135,   313,   287,  -135,  -135,   164,   202,
-    -135,  -135,  -135,  -135,  -135,  -135,  -135,   291,  -135,   283,
-    -135,  -135,    81,  -135,   161,  -135,  -135,   218,  -135,  -135,
-     247,  -135,   100,   100,   281,  -135,   100,  -135,   309,   142,
-     142,  -135,  -135,   268,   225,  -135,  -135,  -135,  -135,  -135,
-    -135,  -135,   265,  -135,   142,  -135,  -135,  -135,   298,  -135,
-    -135,  -135,  -135,  -135
+      -9,    36,   126,  -133,    -9,    27,    17,  -133,  -133,    90,
+     121,   109,    11,    11,    11,    23,  -133,   110,   111,  -133,
+      25,  -133,  -133,    30,  -133,    38,    58,  -133,   -12,    39,
+      11,    11,  -133,    18,   158,  -133,   188,   114,  -133,   142,
+    -133,  -133,  -133,  -133,   265,   265,  -133,    80,    40,    38,
+      38,   265,   115,   168,   275,   102,     7,  -133,    41,    45,
+       5,   153,  -133,   221,    24,  -133,   175,  -133,  -133,  -133,
+    -133,  -133,   167,   154,   275,   118,   253,  -133,  -133,   219,
+    -133,    85,   145,   161,  -133,   385,   113,   160,  -133,  -133,
+    -133,   275,   105,   174,   174,  -133,  -133,   191,  -133,  -133,
+     199,  -133,    52,  -133,    52,   201,   216,    52,    26,   157,
+     181,  -133,   209,   377,  -133,  -133,    52,   159,   159,   275,
+     275,   108,  -133,  -133,  -133,  -133,  -133,  -133,    52,    52,
+      52,    52,    52,    52,  -133,   291,   233,  -133,    28,   225,
+    -133,  -133,    47,    51,   223,   226,  -133,  -133,   168,  -133,
+    -133,  -133,   119,  -133,   229,   198,  -133,  -133,   234,   246,
+    -133,  -133,   336,   230,  -133,  -133,  -133,  -133,  -133,  -133,
+    -133,  -133,  -133,  -133,  -133,   242,  -133,   306,  -133,  -133,
+     128,  -133,   174,  -133,  -133,   191,  -133,  -133,   199,  -133,
+      52,    52,   224,  -133,    52,  -133,   255,   159,   159,   291,
+     248,  -133,  -133,  -133,  -133,  -133,  -133,  -133,   227,  -133,
+     159,  -133,  -133,  -133,   321,  -133,  -133,  -133,  -133,  -133
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -664,39 +672,38 @@ static const yytype_uint8 yydefact[] =
        0,     0,    34,     0,     0,    13,     0,    34,    11,     0,
       26,    25,    12,    10,     0,     0,    33,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,    43,     0,     0,
-       0,   118,    18,     0,     0,    16,     0,    31,    30,    17,
-      15,    14,     0,     0,     0,     0,     0,    90,    91,   118,
-     112,     0,    79,    83,    88,     0,   101,   104,   108,   110,
-     111,     0,     0,     0,     0,    53,    39,    41,    54,    40,
+       0,   114,    18,     0,     0,    16,     0,    31,    30,    17,
+      15,    14,     0,     0,     0,     0,     0,    86,    87,   114,
+     108,     0,    79,    81,    84,     0,    97,   100,   104,   106,
+     107,     0,     0,     0,     0,    53,    39,    41,    54,    40,
       42,    55,     0,    44,     0,     0,     0,     0,     0,     0,
-       0,    23,     0,     0,   109,    87,   115,     0,     0,     0,
-      80,     0,    84,    93,    94,    95,    96,    97,    98,    99,
-       0,     0,     0,     0,     0,     0,    56,     0,     0,    70,
-       0,     0,    52,    38,     0,     0,     0,     0,    24,    22,
-      21,    19,    20,    45,     0,    35,     0,     0,    92,   113,
-     116,     0,    61,    59,     0,     0,    48,    36,    82,    86,
-      89,   103,   102,   105,   106,   107,    63,     0,    49,     0,
-      37,    71,     0,    69,     0,    75,    73,    74,    78,    76,
-      77,   119,     0,     0,     0,    27,   115,   114,     0,     0,
-       0,    81,    85,     0,     0,    51,    50,    72,    68,    67,
-      47,    46,     0,   117,     0,    60,    57,    64,     0,    62,
-      32,    58,    66,    65
+       0,    23,     0,     0,   105,    83,   111,     0,     0,     0,
+       0,    89,    90,    91,    92,    93,    94,    95,     0,     0,
+       0,     0,     0,     0,    56,     0,     0,    70,     0,     0,
+      52,    38,     0,     0,     0,     0,    24,    22,    21,    19,
+      20,    45,     0,    35,     0,     0,    88,   109,   112,     0,
+      61,    59,     0,     0,    48,    36,    80,    82,    85,    99,
+      98,   101,   102,   103,    63,     0,    49,     0,    37,    71,
+       0,    69,     0,    75,    73,    74,    78,    76,    77,   115,
+       0,     0,     0,    27,   111,   110,     0,     0,     0,     0,
+       0,    51,    50,    72,    68,    67,    47,    46,     0,   113,
+       0,    60,    57,    64,     0,    62,    32,    58,    66,    65
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int16 yypgoto[] =
 {
-    -135,  -135,   312,  -135,   224,    98,   -29,   297,   272,   -46,
-    -115,  -134,   -89,   183,   180,   -53,   -85,   209,   162,   214,
-     264,  -135,   -51,    70,  -135,   267,  -135,   145,   -44
+    -133,  -133,   263,  -133,   247,    71,   -35,   256,   228,   -13,
+    -115,  -132,   -89,   148,   150,   -53,   171,  -133,   218,  -133,
+     -51,    87,  -133,   232,  -133,   116,   -44
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
       -1,     2,     3,     4,    19,    35,    62,    20,    36,    63,
-     166,   178,   142,    96,    99,    81,   120,    82,   122,    83,
-      84,   130,    85,    86,    87,    88,    89,   161,    90
+     164,   176,   140,    96,    99,    81,    82,    83,    84,   128,
+      85,    86,    87,    88,    89,   159,    90
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -704,86 +711,92 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int16 yytable[] =
 {
-      64,    64,    92,   167,   180,   143,   136,    64,    93,   103,
-      16,   181,    32,    44,    97,   100,    65,    39,    23,   101,
-     107,   112,    71,   113,   102,   131,   132,    66,    25,   108,
-      37,     9,    14,    17,     7,    75,    40,    33,     5,    45,
-      16,    17,    32,     1,    94,   182,    67,   141,   141,    64,
-      64,   146,    26,   147,    15,    33,   153,   155,    18,    91,
-      34,    64,    64,    95,    74,   160,    18,    79,    80,   217,
-     219,   165,   165,    64,    64,    75,   149,   152,    34,   170,
-     171,   172,   207,   201,   215,   216,     6,    74,    18,    98,
-      34,   177,   177,    64,    64,   209,   185,   117,    75,   221,
-     187,   190,    76,    77,    78,    12,   102,    79,    80,    13,
-     137,    61,    10,   188,    11,    52,   154,    75,   198,    51,
-      64,   102,    72,  -100,    38,    76,    77,    78,   118,   208,
-      79,    80,    75,   206,  -100,    64,    73,    61,   141,   104,
-      64,   210,   211,   162,    61,   160,   138,    69,    70,    79,
-      80,   192,   193,   165,   165,    64,    64,   177,   177,    64,
-      64,    61,   139,   109,    79,    80,  -100,  -100,   165,    30,
-      64,    31,   223,    54,    64,   163,   164,    55,    56,    53,
-     110,    57,    58,    59,   133,   134,   135,   102,   -29,    60,
-     -29,    61,    54,    49,   150,    50,    55,    56,   111,   140,
-      57,    58,    59,   173,   174,   175,   148,   119,    60,    54,
-      61,   179,    27,    55,    56,    28,    29,    57,    58,    59,
-     105,   151,   106,   144,    54,    60,   218,    61,    55,    56,
-      61,    80,    57,    58,    59,   156,    74,    21,    22,    24,
-      60,    54,    61,    53,   121,    55,    56,    75,   176,    57,
-      58,    59,   145,   157,    42,    43,    54,    60,    74,    61,
-      55,    56,   158,   176,    57,    58,    59,    46,   159,    75,
-      47,    48,    60,    54,    61,    77,    78,    55,    56,    79,
-      80,    57,    58,    59,   116,   183,   104,   184,   199,    60,
-     200,    61,   203,   195,   204,   191,    76,    77,    78,    54,
-     196,    79,    80,    55,    56,   194,   176,    57,    58,    59,
-     197,   212,   214,   220,    54,    60,     8,    61,    55,    56,
-      68,   205,    57,    58,    59,   189,    41,   186,   168,    54,
-      60,   202,    61,    55,    56,   169,   222,    57,    58,    59,
-     115,   213,   114,     0,    54,    60,     0,    61,    55,    56,
-       0,     0,    57,    58,    59,   123,     0,     0,     0,     0,
-      60,   159,    61,   123,     0,   124,   125,   126,   127,   128,
-     129,     0,     0,   124,   125,   126,   127,   128,   129
+      64,    64,    92,   165,   178,   141,   101,    64,    93,   103,
+      65,   102,    16,     1,    97,   100,    71,    39,    10,    44,
+      11,   112,    75,   113,    23,   107,    30,   152,    31,   179,
+       9,   -29,   102,   -29,   108,    17,    40,     5,   134,    32,
+      16,    32,    95,    75,    94,    45,    98,    17,   183,    64,
+      64,   144,   186,   145,    79,    80,   151,   153,   102,    37,
+      18,    64,    64,   180,    33,   158,   166,   213,   215,    75,
+     147,   150,    18,    64,    64,    79,    80,   168,   169,   170,
+     139,   139,   211,   212,    33,     6,   117,    34,    18,    34,
+      61,    64,    64,   205,    61,   217,    61,    38,   185,   188,
+      61,    79,    80,    91,   163,   163,   135,    34,    74,    66,
+      14,    25,    27,    12,   -96,    28,    29,   118,    64,    75,
+      69,    70,   175,   175,   102,   -96,     7,   204,    67,   203,
+     129,   130,    15,    64,    74,    26,   190,   191,    64,   206,
+     207,    51,   136,   158,    13,    75,    76,    77,    78,   196,
+      52,    79,    80,    64,    64,    64,    64,   -96,   -96,    46,
+     160,   104,    47,    48,   202,    72,    64,    61,    80,   139,
+      64,    73,    76,    77,    78,   137,   110,    79,    80,   131,
+     132,   133,   111,   109,   163,   163,   175,   175,   119,    49,
+      54,    50,   161,   162,    55,    56,   142,   163,    57,    58,
+      59,   219,    53,   120,   143,    54,    60,   154,    61,    55,
+      56,   155,   138,    57,    58,    59,   156,   148,   171,   172,
+     173,    60,   105,    61,   106,   116,   181,   104,   182,   146,
+     157,   197,    54,   198,   177,   189,    55,    56,   192,   194,
+      57,    58,    59,   199,   149,   200,   193,    54,    60,   214,
+      61,    55,    56,   195,   208,    57,    58,    59,   210,    74,
+      21,    22,    24,    60,    54,    61,    53,     8,    55,    56,
+      75,   174,    57,    58,    59,   216,    68,    42,    43,    54,
+      60,    74,    61,    55,    56,    41,   174,    57,    58,    59,
+     184,   167,    75,   187,   115,    60,    54,    61,    77,    78,
+      55,    56,    79,    80,    57,    58,    59,   114,     0,     0,
+     209,     0,    60,     0,    61,     0,     0,     0,     0,    76,
+      77,    78,    54,     0,    79,    80,    55,    56,     0,   174,
+      57,    58,    59,     0,     0,     0,     0,    54,    60,     0,
+      61,    55,    56,     0,   201,    57,    58,    59,     0,     0,
+       0,     0,    54,    60,     0,    61,    55,    56,     0,   218,
+      57,    58,    59,     0,     0,     0,     0,    54,    60,     0,
+      61,    55,    56,     0,     0,    57,    58,    59,   121,     0,
+       0,     0,     0,    60,   157,    61,   121,     0,   122,   123,
+     124,   125,   126,   127,     0,     0,   122,   123,   124,   125,
+     126,   127
 };
 
 static const yytype_int16 yycheck[] =
 {
-      44,    45,    55,   118,   138,    94,    91,    51,     1,    60,
-       1,     1,     1,     1,    58,    59,    45,    29,     1,     1,
-       1,    74,    51,    74,     6,    17,    18,    29,     1,    10,
-       1,     3,     1,    24,     0,    17,    48,    26,     1,    27,
-       1,    24,     1,    22,    37,    35,    48,    93,    94,    93,
-      94,   102,    25,   104,    23,    26,   107,   108,    49,     1,
-      49,   105,   106,     1,     6,   116,    49,    49,    50,   203,
-     204,   117,   118,   117,   118,    17,   105,   106,    49,   130,
-     131,   132,     1,   168,   199,   200,    49,     6,    49,     1,
-      49,   137,   138,   137,   138,   184,     1,     1,    17,   214,
-     144,   145,    44,    45,    46,    23,     6,    49,    50,    23,
-       1,    49,     1,     1,     3,     8,     1,    17,   164,    27,
-     164,     6,    50,     6,    26,    44,    45,    46,    32,   182,
-      49,    50,    17,   179,    17,   179,     3,    49,   184,     8,
-     184,   192,   193,     1,    49,   196,    37,    49,    50,    49,
-      50,    17,    18,   199,   200,   199,   200,   203,   204,   203,
-     204,    49,     1,     8,    49,    50,    49,    50,   214,     1,
-     214,     3,   218,    31,   218,    33,    34,    35,    36,     1,
-       9,    39,    40,    41,    19,    20,    21,     6,     1,    47,
-       3,    49,    31,     1,     1,     3,    35,    36,    28,    38,
-      39,    40,    41,   133,   134,   135,    28,    43,    47,    31,
-      49,     1,     1,    35,    36,     4,     5,    39,    40,    41,
-       1,    28,     3,     5,    31,    47,     1,    49,    35,    36,
-      49,    50,    39,    40,    41,    50,     6,    13,    14,    15,
-      47,    31,    49,     1,    42,    35,    36,    17,    38,    39,
-      40,    41,     5,    30,    30,    31,    31,    47,     6,    49,
-      35,    36,     7,    38,    39,    40,    41,     1,     7,    17,
-       4,     5,    47,    31,    49,    45,    46,    35,    36,    49,
-      50,    39,    40,    41,     6,     1,     8,     3,     1,    47,
-       3,    49,     1,    48,     3,     9,    44,    45,    46,    31,
-       5,    49,    50,    35,    36,     9,    38,    39,    40,    41,
-       7,    30,     3,    48,    31,    47,     4,    49,    35,    36,
-      48,    38,    39,    40,    41,   145,    29,   144,   119,    31,
-      47,   169,    49,    35,    36,   121,    38,    39,    40,    41,
-      76,   196,    75,    -1,    31,    47,    -1,    49,    35,    36,
-      -1,    -1,    39,    40,    41,     1,    -1,    -1,    -1,    -1,
-      47,     7,    49,     1,    -1,    11,    12,    13,    14,    15,
-      16,    -1,    -1,    11,    12,    13,    14,    15,    16
+      44,    45,    55,   118,   136,    94,     1,    51,     1,    60,
+      45,     6,     1,    22,    58,    59,    51,    29,     1,     1,
+       3,    74,    17,    74,     1,     1,     1,     1,     3,     1,
+       3,     1,     6,     3,    10,    24,    48,     1,    91,     1,
+       1,     1,     1,    17,    37,    27,     1,    24,     1,    93,
+      94,   102,     1,   104,    49,    50,   107,   108,     6,     1,
+      49,   105,   106,    35,    26,   116,   119,   199,   200,    17,
+     105,   106,    49,   117,   118,    49,    50,   128,   129,   130,
+      93,    94,   197,   198,    26,    49,     1,    49,    49,    49,
+      49,   135,   136,   182,    49,   210,    49,    26,   142,   143,
+      49,    49,    50,     1,   117,   118,     1,    49,     6,    29,
+       1,     1,     1,    23,     6,     4,     5,    32,   162,    17,
+      49,    50,   135,   136,     6,    17,     0,   180,    48,     1,
+      17,    18,    23,   177,     6,    25,    17,    18,   182,   190,
+     191,    27,    37,   194,    23,    17,    44,    45,    46,   162,
+       8,    49,    50,   197,   198,   199,   200,    49,    50,     1,
+       1,     8,     4,     5,   177,    50,   210,    49,    50,   182,
+     214,     3,    44,    45,    46,     1,     9,    49,    50,    19,
+      20,    21,    28,     8,   197,   198,   199,   200,    43,     1,
+      31,     3,    33,    34,    35,    36,     5,   210,    39,    40,
+      41,   214,     1,    42,     5,    31,    47,    50,    49,    35,
+      36,    30,    38,    39,    40,    41,     7,     1,   131,   132,
+     133,    47,     1,    49,     3,     6,     1,     8,     3,    28,
+       7,     1,    31,     3,     1,     9,    35,    36,     9,     5,
+      39,    40,    41,     1,    28,     3,    48,    31,    47,     1,
+      49,    35,    36,     7,    30,    39,    40,    41,     3,     6,
+      13,    14,    15,    47,    31,    49,     1,     4,    35,    36,
+      17,    38,    39,    40,    41,    48,    48,    30,    31,    31,
+      47,     6,    49,    35,    36,    29,    38,    39,    40,    41,
+     142,   120,    17,   143,    76,    47,    31,    49,    45,    46,
+      35,    36,    49,    50,    39,    40,    41,    75,    -1,    -1,
+     194,    -1,    47,    -1,    49,    -1,    -1,    -1,    -1,    44,
+      45,    46,    31,    -1,    49,    50,    35,    36,    -1,    38,
+      39,    40,    41,    -1,    -1,    -1,    -1,    31,    47,    -1,
+      49,    35,    36,    -1,    38,    39,    40,    41,    -1,    -1,
+      -1,    -1,    31,    47,    -1,    49,    35,    36,    -1,    38,
+      39,    40,    41,    -1,    -1,    -1,    -1,    31,    47,    -1,
+      49,    35,    36,    -1,    -1,    39,    40,    41,     1,    -1,
+      -1,    -1,    -1,    47,     7,    49,     1,    -1,    11,    12,
+      13,    14,    15,    16,    -1,    -1,    11,    12,    13,    14,
+      15,    16
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -796,23 +809,22 @@ static const yytype_uint8 yystos[] =
        1,     3,     1,    26,    49,    56,    59,     1,    56,    29,
       48,    58,    55,    55,     1,    27,     1,     4,     5,     1,
        3,    27,     8,     1,    31,    35,    36,    39,    40,    41,
-      47,    49,    57,    60,    79,    57,    29,    48,    59,    56,
+      47,    49,    57,    60,    77,    57,    29,    48,    59,    56,
       56,    57,    50,     3,     6,    17,    44,    45,    46,    49,
-      50,    66,    68,    70,    71,    73,    74,    75,    76,    77,
-      79,     1,    66,     1,    37,     1,    64,    79,     1,    65,
-      79,     1,     6,    73,     8,     1,     3,     1,    10,     8,
-       9,    28,    66,    73,    76,    71,     6,     1,    32,    43,
-      67,    42,    69,     1,    11,    12,    13,    14,    15,    16,
-      72,    17,    18,    19,    20,    21,    67,     1,    37,     1,
-      38,    60,    63,    63,     5,     5,    73,    73,    28,    57,
-       1,    28,    57,    73,     1,    73,    50,    30,     7,     7,
-      73,    78,     1,    33,    34,    60,    61,    61,    68,    70,
-      73,    73,    73,    74,    74,    74,    38,    60,    62,     1,
-      62,     1,    35,     1,     3,     1,    64,    79,     1,    65,
-      79,     9,    17,    18,     9,    48,     5,     7,    60,     1,
-       3,    67,    69,     1,     3,    38,    60,     1,    66,    63,
-      73,    73,    30,    78,     3,    61,    61,    62,     1,    62,
-      48,    61,    38,    60
+      50,    66,    67,    68,    69,    71,    72,    73,    74,    75,
+      77,     1,    66,     1,    37,     1,    64,    77,     1,    65,
+      77,     1,     6,    71,     8,     1,     3,     1,    10,     8,
+       9,    28,    66,    71,    74,    69,     6,     1,    32,    43,
+      42,     1,    11,    12,    13,    14,    15,    16,    70,    17,
+      18,    19,    20,    21,    66,     1,    37,     1,    38,    60,
+      63,    63,     5,     5,    71,    71,    28,    57,     1,    28,
+      57,    71,     1,    71,    50,    30,     7,     7,    71,    76,
+       1,    33,    34,    60,    61,    61,    66,    67,    71,    71,
+      71,    72,    72,    72,    38,    60,    62,     1,    62,     1,
+      35,     1,     3,     1,    64,    77,     1,    65,    77,     9,
+      17,    18,     9,    48,     5,     7,    60,     1,     3,     1,
+       3,    38,    60,     1,    66,    63,    71,    71,    30,    76,
+       3,    61,    61,    62,     1,    62,    48,    61,    38,    60
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -826,10 +838,10 @@ static const yytype_uint8 yyr1[] =
       60,    60,    60,    60,    60,    60,    60,    61,    61,    61,
       61,    61,    62,    62,    62,    62,    62,    63,    63,    63,
       63,    63,    63,    64,    64,    64,    65,    65,    65,    66,
-      66,    67,    67,    68,    68,    69,    69,    70,    70,    71,
-      71,    71,    71,    71,    72,    72,    72,    72,    72,    72,
-      72,    73,    73,    73,    74,    74,    74,    74,    75,    75,
-      75,    76,    76,    76,    77,    78,    78,    78,    79,    79
+      66,    67,    67,    68,    68,    69,    69,    69,    69,    69,
+      70,    70,    70,    70,    70,    70,    70,    71,    71,    71,
+      72,    72,    72,    72,    73,    73,    73,    74,    74,    74,
+      75,    76,    76,    76,    77,    77
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
@@ -843,10 +855,10 @@ static const yytype_uint8 yyr2[] =
        5,     5,     3,     2,     2,     2,     3,     3,     4,     1,
        3,     1,     3,     1,     3,     4,     4,     3,     3,     2,
        1,     2,     3,     3,     3,     3,     3,     3,     3,     1,
-       2,     3,     2,     1,     2,     3,     2,     2,     1,     3,
-       1,     1,     3,     2,     1,     1,     1,     1,     1,     1,
-       1,     1,     3,     3,     1,     3,     3,     3,     1,     2,
-       1,     1,     1,     3,     4,     0,     1,     3,     1,     4
+       3,     1,     3,     2,     1,     3,     1,     1,     3,     2,
+       1,     1,     1,     1,     1,     1,     1,     1,     3,     3,
+       1,     3,     3,     3,     1,     2,     1,     1,     1,     3,
+       4,     0,     1,     3,     1,     4
 };
 
 
@@ -1523,31 +1535,21 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 129 "mini_l.y" /* yacc.c:1646  */
-    { 	char found = 0;
-																				printf("%d----------\n", d2);
-																				for(int i = 0; i < 10; i++) {
-																					printf("------------ %s\n", defined[i]);
-																					if(strcmp(defined[i], "main") == 0)	found = 1;
-																					printf("------------ %s\n", defined[i]);
-																			    }
-																				if(!found) printf("Error: no main function definition is given.\n");
-
-
-																			}
-#line 1539 "y.tab.c" /* yacc.c:1646  */
+#line 139 "mini_l.y" /* yacc.c:1646  */
+    {  }
+#line 1541 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 142 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1545 "y.tab.c" /* yacc.c:1646  */
+#line 1547 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
 #line 143 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1551 "y.tab.c" /* yacc.c:1646  */
+#line 1553 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
@@ -1558,7 +1560,7 @@ yyreduce:
 																				strcpy((yyval.func_struct).name, c);
 																				tmp2++;
 																				strcpy(defined[d2], (yyvsp[-3].str));
-																				printf("------------ %s\n", defined[d2]);
+																				if(strcmp(defined[d2], "main") == 0) hasMain = 1;
 																				d2++;
 
 																			  	for(int i = 0; i < call; i++) {
@@ -1569,7 +1571,10 @@ yyreduce:
 																							j = d2;
 																						}
 																					}
-																					if(!found) printf("Error line %d: function \"%s\" called before definition.\n", calls[i], called[i]);
+																					if(!found) {
+																						printf("Error line %d: function \"%s\" called before definition.\n", calls[i], called[i]);
+																						error = 1;
+																					}
 																			  	}
 
 																				if(fCnt > 0) {
@@ -1595,131 +1600,139 @@ yyreduce:
 																				top = tmp2;
 																				fCnt++;
 																			}
-#line 1599 "y.tab.c" /* yacc.c:1646  */
+#line 1604 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 189 "mini_l.y" /* yacc.c:1646  */
+#line 192 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"declaration or endparams\"\n", errors[tmp]); }
-#line 1605 "y.tab.c" /* yacc.c:1646  */
+#line 1610 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 190 "mini_l.y" /* yacc.c:1646  */
+#line 193 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginparams\"\n", errors[tmp]); }
-#line 1611 "y.tab.c" /* yacc.c:1646  */
+#line 1616 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 191 "mini_l.y" /* yacc.c:1646  */
+#line 194 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1617 "y.tab.c" /* yacc.c:1646  */
+#line 1622 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 192 "mini_l.y" /* yacc.c:1646  */
+#line 195 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"identifier\"\n", errors[tmp]); }
-#line 1623 "y.tab.c" /* yacc.c:1646  */
+#line 1628 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 195 "mini_l.y" /* yacc.c:1646  */
+#line 198 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1629 "y.tab.c" /* yacc.c:1646  */
+#line 1634 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 196 "mini_l.y" /* yacc.c:1646  */
+#line 199 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1635 "y.tab.c" /* yacc.c:1646  */
+#line 1640 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 197 "mini_l.y" /* yacc.c:1646  */
+#line 200 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1641 "y.tab.c" /* yacc.c:1646  */
+#line 1646 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 198 "mini_l.y" /* yacc.c:1646  */
+#line 201 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginlocals\"\n", errors[tmp]); }
-#line 1647 "y.tab.c" /* yacc.c:1646  */
+#line 1652 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 199 "mini_l.y" /* yacc.c:1646  */
+#line 202 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"declaration or endlocals\"\n", errors[tmp]); }
-#line 1653 "y.tab.c" /* yacc.c:1646  */
+#line 1658 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 202 "mini_l.y" /* yacc.c:1646  */
+#line 205 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1659 "y.tab.c" /* yacc.c:1646  */
+#line 1664 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 203 "mini_l.y" /* yacc.c:1646  */
+#line 206 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1665 "y.tab.c" /* yacc.c:1646  */
+#line 1670 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 204 "mini_l.y" /* yacc.c:1646  */
+#line 207 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1671 "y.tab.c" /* yacc.c:1646  */
+#line 1676 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 205 "mini_l.y" /* yacc.c:1646  */
+#line 208 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginbody\"\n", errors[tmp]); }
-#line 1677 "y.tab.c" /* yacc.c:1646  */
+#line 1682 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 208 "mini_l.y" /* yacc.c:1646  */
+#line 211 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1683 "y.tab.c" /* yacc.c:1646  */
+#line 1688 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 209 "mini_l.y" /* yacc.c:1646  */
+#line 212 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1689 "y.tab.c" /* yacc.c:1646  */
+#line 1694 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 210 "mini_l.y" /* yacc.c:1646  */
+#line 213 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endbody\"\n", errors[tmp]); }
-#line 1695 "y.tab.c" /* yacc.c:1646  */
+#line 1700 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 211 "mini_l.y" /* yacc.c:1646  */
+#line 214 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1701 "y.tab.c" /* yacc.c:1646  */
+#line 1706 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 212 "mini_l.y" /* yacc.c:1646  */
+#line 215 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement\"\n", errors[tmp]); }
-#line 1707 "y.tab.c" /* yacc.c:1646  */
+#line 1712 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 213 "mini_l.y" /* yacc.c:1646  */
+#line 216 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 1713 "y.tab.c" /* yacc.c:1646  */
+#line 1718 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 216 "mini_l.y" /* yacc.c:1646  */
+#line 219 "mini_l.y" /* yacc.c:1646  */
     { 	
 																				for(int i = 0; i < d1; i++) {
-																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
+																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																						error = 1;
+																					}
+																				}
+																				if((strcmp((yyvsp[-2].str), "true") == 0) || (strcmp((yyvsp[-2].str), "false") == 0)) {
+																					printf("Error line %d: symbol \"%s\" is a reserved keyword and cannot be used to declare variables.\n", currLine, (yyvsp[-2].str));
+																					error = 1;
 																				}
 																				strcpy(declared[d1], (yyvsp[-2].str));
 																				d1++;
+																				
 																				for(int i = tmp2; i > (yyvsp[0].decl_struct).start; i--) {
 																					strcpy(code[i], code[i-1]);
 																				}
@@ -1727,27 +1740,44 @@ yyreduce:
 																					char c[200];
 																					sprintf(c, ". %s\n", (yyvsp[-2].str));
 																					strcpy(code[(yyvsp[0].decl_struct).start], c);
+																					strcpy(varNames[varInd], (yyvsp[-2].str));
+																					varInd++;
 																				}
 																				else if(strcmp((yyvsp[0].decl_struct).type, "array") == 0) {
 																					char c[200];
 																			  		sprintf(c, ".[] %s, %d\n", (yyvsp[-2].str), (yyvsp[0].decl_struct).size);
 																					strcpy(code[(yyvsp[0].decl_struct).start], c);
+																					strcpy(arrNames[arr], (yyvsp[-2].str));
+																			  		arr++;
 																				}
 																				(yyval.decl_struct).start = (yyvsp[0].decl_struct).start;
 																				strcpy((yyval.decl_struct).type, (yyvsp[0].decl_struct).type);
 																				(yyval.decl_struct).size = (yyvsp[0].decl_struct).size;
 																			  	tmp2++;
 																			}
-#line 1742 "y.tab.c" /* yacc.c:1646  */
+#line 1759 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 240 "mini_l.y" /* yacc.c:1646  */
+#line 255 "mini_l.y" /* yacc.c:1646  */
     {	for(int i = 0; i < d1; i++) {
-																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
+																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																						error = 1;
+																					}
 																				}
+
+																				if((strcmp((yyvsp[-2].str), "true") == 0) || (strcmp((yyvsp[-2].str), "false") == 0)) {
+																					printf("Error line %d: symbol \"%s\" is a reserved keyword and cannot be used to declare variables.\n", currLine, (yyvsp[-2].str));
+																					error = 1;
+																				}
+
 																				strcpy(declared[d1], (yyvsp[-2].str));
 																				d1++;
+
+																				strcpy(varNames[varInd], (yyvsp[-2].str));
+																				varInd++;
+																				
 																				char c[200];
 																				sprintf(c, ". %s\n", (yyvsp[-2].str));
 																				strcpy(code[tmp2], c);
@@ -1761,16 +1791,34 @@ yyreduce:
 																				strcpy((yyval.decl_struct).type, "var");
 																				tmp2++;
 																			}
-#line 1765 "y.tab.c" /* yacc.c:1646  */
+#line 1795 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 258 "mini_l.y" /* yacc.c:1646  */
+#line 286 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = 0; i < d1; i++) {
-																								if(strcmp(declared[i], (yyvsp[-7].str)) == 0) printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-7].str));
+																								if(strcmp(declared[i], (yyvsp[-7].str)) == 0) {
+																									printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-7].str));
+																									error = 1;
+																								}
 																							}
+
+																							if((strcmp((yyvsp[-7].str), "true") == 0) || (strcmp((yyvsp[-7].str), "false") == 0)) {
+																								printf("Error line %d: symbol \"%s\" is a reserved keyword and cannot be used to declare variables.\n", currLine, (yyvsp[-7].str));
+																								error = 1;
+																							}
+
+																							if((yyvsp[-3].expr_struct).value <= 0) {
+																								printf("Error line %d: symbol \"%s\" has array index less than or equal to zero.\n", currLine, (yyvsp[-7].str));
+																								error = 1;
+																							}
+
 																							strcpy(declared[d1], (yyvsp[-7].str));
 																							d1++;
+
+																							strcpy(arrNames[arr], (yyvsp[-7].str));
+																			  				arr++;
+																							
 																							char c[200];
 																			  			  	sprintf(c, ".[] %s, %d\n", (yyvsp[-7].str), (yyvsp[-3].expr_struct).value);
 																			  			  	strcpy(code[tmp2], c);
@@ -1779,28 +1827,38 @@ yyreduce:
 																							(yyval.decl_struct).size = (yyvsp[-3].expr_struct).value;
 																			  			  	tmp2++;
 																						}
-#line 1783 "y.tab.c" /* yacc.c:1646  */
+#line 1831 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 271 "mini_l.y" /* yacc.c:1646  */
+#line 317 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: invalid declaration\n", errors[tmp]); }
-#line 1789 "y.tab.c" /* yacc.c:1646  */
+#line 1837 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 272 "mini_l.y" /* yacc.c:1646  */
+#line 318 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"identifier, endparams, or endlocals\"\n", errors[tmp]); }
-#line 1795 "y.tab.c" /* yacc.c:1646  */
+#line 1843 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 275 "mini_l.y" /* yacc.c:1646  */
+#line 321 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = 0; i < d1; i++) {
-																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
+																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																						error = 1;
+																					}
 																				}
+
+																				if((strcmp((yyvsp[-2].str), "true") == 0) || (strcmp((yyvsp[-2].str), "false") == 0)) {
+																					printf("Error line %d: symbol \"%s\" is a reserved keyword and cannot be used to declare variables.\n", currLine, (yyvsp[-2].str));
+																					error = 1;
+																				}
+
 																				strcpy(declared[d1], (yyvsp[-2].str));
 																				d1++;
+																				
 																				for(int i = tmp2; i > (yyvsp[0].decl_struct).start; i--) {
 																					strcpy(code[i], code[i-1]);
 																				}
@@ -1808,27 +1866,44 @@ yyreduce:
 																					char c[200];
 																					sprintf(c, ". %s\n", (yyvsp[-2].str));
 																					strcpy(code[(yyvsp[0].decl_struct).start], c);
+																					strcpy(varNames[varInd], (yyvsp[-2].str));
+																					varInd++;
 																				}
 																				else if(strcmp((yyvsp[0].decl_struct).type, "array") == 0) {
 																					char c[200];
 																			  		sprintf(c, ".[] %s, %d\n", (yyvsp[-2].str), (yyvsp[0].decl_struct).size);
 																					strcpy(code[(yyvsp[0].decl_struct).start], c);
+																					strcpy(arrNames[arr], (yyvsp[-2].str));
+																			  		arr++;
 																				}
 																				(yyval.decl_struct).start = (yyvsp[0].decl_struct).start;
 																				strcpy((yyval.decl_struct).type, (yyvsp[0].decl_struct).type);
 																				(yyval.decl_struct).size = (yyvsp[0].decl_struct).size;
 																			  	tmp2++;
 																			}
-#line 1823 "y.tab.c" /* yacc.c:1646  */
+#line 1885 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 298 "mini_l.y" /* yacc.c:1646  */
+#line 358 "mini_l.y" /* yacc.c:1646  */
     {	for(int i = 0; i < d1; i++) {
-																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																					if(strcmp(declared[i], (yyvsp[-2].str)) == 0) {
+																						printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-2].str));
+																						error = 1;
+																					}
 																				}
+
+																				if((strcmp((yyvsp[-2].str), "true") == 0) || (strcmp((yyvsp[-2].str), "false") == 0)) {
+																					printf("Error line %d: symbol \"%s\" is a reserved keyword and cannot be used to declare variables.\n", currLine, (yyvsp[-2].str));
+																					error = 1;
+																				}
+
 																				strcpy(declared[d1], (yyvsp[-2].str));
 																				d1++;
+
+																				strcpy(varNames[varInd], (yyvsp[-2].str));
+																				varInd++;
+																				
 																				char c[200];
 																				sprintf(c, ". %s\n", (yyvsp[-2].str));
 																				strcpy(code[tmp2], c);
@@ -1836,16 +1911,34 @@ yyreduce:
 																				strcpy((yyval.decl_struct).type, "var");
 																				tmp2++;
 																			}
-#line 1840 "y.tab.c" /* yacc.c:1646  */
+#line 1915 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 310 "mini_l.y" /* yacc.c:1646  */
+#line 383 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = 0; i < d1; i++) {
-																								if(strcmp(declared[i], (yyvsp[-7].str)) == 0) printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-7].str));
+																								if(strcmp(declared[i], (yyvsp[-7].str)) == 0) {
+																									printf("Error line %d: symbol \"%s\" is already defined.\n", currLine, (yyvsp[-7].str));
+																									error = 1;
+																								}
 																							}
+
+																							if((strcmp((yyvsp[-7].str), "true") == 0) || (strcmp((yyvsp[-7].str), "false") == 0)) {
+																								printf("Error line %d: symbol \"%s\" is a reserved keyword and cannot be used to declare variables.\n", currLine, (yyvsp[-7].str));
+																								error = 1;
+																							}
+
+																							if((yyvsp[-3].expr_struct).value <= 0) {
+																								printf("Error line %d: symbol \"%s\" has array index less than or equal to zero.\n", currLine, (yyvsp[-7].str));
+																								error = 1;
+																							}
+
 																							strcpy(declared[d1], (yyvsp[-7].str));
 																							d1++;
+
+																							strcpy(arrNames[arr], (yyvsp[-7].str));
+																			  				arr++;
+																							
 																							char c[200];
 																			  			  	sprintf(c, ".[] %s, %d\n", (yyvsp[-7].str), (yyvsp[-3].expr_struct).value);
 																			  			  	strcpy(code[tmp2], c);
@@ -1854,23 +1947,23 @@ yyreduce:
 																							(yyval.decl_struct).size = (yyvsp[-3].expr_struct).value;
 																			  			  	tmp2++;
 																						}
-#line 1858 "y.tab.c" /* yacc.c:1646  */
+#line 1951 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 323 "mini_l.y" /* yacc.c:1646  */
+#line 414 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: invalid declaration\n", errors[tmp]); }
-#line 1864 "y.tab.c" /* yacc.c:1646  */
+#line 1957 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 324 "mini_l.y" /* yacc.c:1646  */
+#line 415 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"identifier, endparams, or endlocals\"\n", errors[tmp]); }
-#line 1870 "y.tab.c" /* yacc.c:1646  */
+#line 1963 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 327 "mini_l.y" /* yacc.c:1646  */
+#line 418 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  if(strcmp((yyvsp[-2].var_struct).type, "var") == 0) {
 																				sprintf(c1, "= %s, %s\n", (yyvsp[-2].var_struct).name, (yyvsp[0].expr_struct).ret_name);
@@ -1880,14 +1973,16 @@ yyreduce:
 																				  sprintf(c1, "[]= %s, %s, %s\n", (yyvsp[-2].var_struct).name, (yyvsp[-2].var_struct).ind_name, (yyvsp[0].expr_struct).ret_name);
 																				  strcpy(code[tmp2], c1);
 																			  }
+																			  (yyval.statement_struct).stateStrt = (yyvsp[0].expr_struct).start;
 																			  tmp2++;
 																			}
-#line 1886 "y.tab.c" /* yacc.c:1646  */
+#line 1980 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 338 "mini_l.y" /* yacc.c:1646  */
+#line 430 "mini_l.y" /* yacc.c:1646  */
     { if((yyvsp[0].relexpr_struct).done) {
+																				
 																				char c0[200];
 																				sprintf(c0, ": __label__%d\n", label+1);
 																				strcpy(code[(yyvsp[0].relexpr_struct).outside], c0);
@@ -1922,14 +2017,14 @@ yyreduce:
 																				tmp2++;
 																				label+=2;
 																			  }
-
+																			  (yyval.statement_struct).stateStrt = (yyvsp[-2].relexpr_struct).start;
 
 																			}
-#line 1929 "y.tab.c" /* yacc.c:1646  */
+#line 2024 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 376 "mini_l.y" /* yacc.c:1646  */
+#line 469 "mini_l.y" /* yacc.c:1646  */
     {  if(strcmp((yyvsp[-2].relexpr_struct).type, "nested") && (yyvsp[0].relexpr_struct).done) {
 																				for(int i = tmp2; i > (yyvsp[-2].relexpr_struct).end; i--) {
 																					strcpy(code[i], code[i-1]);
@@ -1983,236 +2078,264 @@ yyreduce:
 																			  tmp2++;
 																			  label++;
 																			}
-#line 1987 "y.tab.c" /* yacc.c:1646  */
+#line 2082 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 429 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 1993 "y.tab.c" /* yacc.c:1646  */
+#line 522 "mini_l.y" /* yacc.c:1646  */
+    { if((yyvsp[0].relexpr_struct).done) {
+
+																				for(int i = tmp2; i > (yyvsp[0].relexpr_struct).stateStrt; i--) {
+																					strcpy(code[i], code[i-1]);
+																				}
+
+																				char c3[200];
+																				sprintf(c3, ": __label__%d\n", label);
+																				strcpy(code[(yyvsp[0].relexpr_struct).stateStrt], c3);
+																				tmp2++;
+
+																				for(int i = (yyvsp[0].relexpr_struct).start; i <= (yyvsp[0].relexpr_struct).end; i++) {
+																					strcpy(code[tmp2], code[i]);
+																					tmp2++;
+																				}
+
+																				char c1[200];
+																				sprintf(c1, "?:= __label__%d, %s\n", label, (yyvsp[0].relexpr_struct).ret_name);
+																				strcpy(code[tmp2-1], c1);
+																				tmp2++;
+
+																				inLoop -= 1;
+																				label++;
+																			  }
+																			}
+#line 2112 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 430 "mini_l.y" /* yacc.c:1646  */
+#line 547 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 1999 "y.tab.c" /* yacc.c:1646  */
+#line 2118 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 431 "mini_l.y" /* yacc.c:1646  */
+#line 548 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2005 "y.tab.c" /* yacc.c:1646  */
+#line 2124 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 432 "mini_l.y" /* yacc.c:1646  */
+#line 549 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".< %s\n", (yyvsp[0].var_struct).name);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2015 "y.tab.c" /* yacc.c:1646  */
+#line 2134 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 437 "mini_l.y" /* yacc.c:1646  */
+#line 554 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".> %s\n", (yyvsp[0].var_struct).name);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2025 "y.tab.c" /* yacc.c:1646  */
+#line 2144 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 442 "mini_l.y" /* yacc.c:1646  */
-    { if(!inLoop) printf("Error line %d: break statement not within a loop.\n", currLine); }
-#line 2031 "y.tab.c" /* yacc.c:1646  */
+#line 559 "mini_l.y" /* yacc.c:1646  */
+    { if(!inLoop) {
+																				printf("Error line %d: break statement not within a loop.\n", currLine);
+																				error = 1;
+																			  }
+																			}
+#line 2154 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 443 "mini_l.y" /* yacc.c:1646  */
+#line 564 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, "ret __temp__%d\n", temp-1);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2041 "y.tab.c" /* yacc.c:1646  */
+#line 2164 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 448 "mini_l.y" /* yacc.c:1646  */
+#line 569 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \":=\"\n", errors[tmp]); }
-#line 2047 "y.tab.c" /* yacc.c:1646  */
+#line 2170 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 449 "mini_l.y" /* yacc.c:1646  */
+#line 570 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"expression\"\n", errors[tmp]); }
-#line 2053 "y.tab.c" /* yacc.c:1646  */
+#line 2176 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 450 "mini_l.y" /* yacc.c:1646  */
+#line 571 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"expression\"\n", errors[tmp]); }
-#line 2059 "y.tab.c" /* yacc.c:1646  */
+#line 2182 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 451 "mini_l.y" /* yacc.c:1646  */
+#line 572 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"then\"\n", errors[tmp]); }
-#line 2065 "y.tab.c" /* yacc.c:1646  */
+#line 2188 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 452 "mini_l.y" /* yacc.c:1646  */
+#line 573 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginloop\"\n", errors[tmp]); }
-#line 2071 "y.tab.c" /* yacc.c:1646  */
+#line 2194 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 453 "mini_l.y" /* yacc.c:1646  */
+#line 574 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid statement\"\n", errors[tmp]); }
-#line 2077 "y.tab.c" /* yacc.c:1646  */
+#line 2200 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 454 "mini_l.y" /* yacc.c:1646  */
+#line 575 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid statement\"\n", errors[tmp]); }
-#line 2083 "y.tab.c" /* yacc.c:1646  */
+#line 2206 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 455 "mini_l.y" /* yacc.c:1646  */
+#line 576 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"beginloop\"\n", errors[tmp]); }
-#line 2089 "y.tab.c" /* yacc.c:1646  */
+#line 2212 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 456 "mini_l.y" /* yacc.c:1646  */
+#line 577 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid read\"\n", errors[tmp]); }
-#line 2095 "y.tab.c" /* yacc.c:1646  */
+#line 2218 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 457 "mini_l.y" /* yacc.c:1646  */
+#line 578 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: \"invalid write\"\n", errors[tmp]); }
-#line 2101 "y.tab.c" /* yacc.c:1646  */
+#line 2224 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 458 "mini_l.y" /* yacc.c:1646  */
+#line 579 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"return expression\"\n", errors[tmp]); }
-#line 2107 "y.tab.c" /* yacc.c:1646  */
+#line 2230 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 459 "mini_l.y" /* yacc.c:1646  */
+#line 580 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"while loop condition\"\n", errors[tmp]); }
-#line 2113 "y.tab.c" /* yacc.c:1646  */
+#line 2236 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 462 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; (yyval.relexpr_struct).outside = (yyvsp[0].relexpr_struct).outside; }
-#line 2119 "y.tab.c" /* yacc.c:1646  */
+#line 583 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; (yyval.relexpr_struct).outside = (yyvsp[0].relexpr_struct).outside; (yyval.relexpr_struct).stateStrt = (yyvsp[-2].statement_struct).stateStrt; }
+#line 2242 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 463 "mini_l.y" /* yacc.c:1646  */
+#line 584 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2125 "y.tab.c" /* yacc.c:1646  */
+#line 2248 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 464 "mini_l.y" /* yacc.c:1646  */
+#line 585 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = 1;
 																			  (yyval.relexpr_struct).outside = tmp2;
 																			  tmp2++;
 																		    }
-#line 2134 "y.tab.c" /* yacc.c:1646  */
+#line 2257 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 468 "mini_l.y" /* yacc.c:1646  */
+#line 589 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 2140 "y.tab.c" /* yacc.c:1646  */
+#line 2263 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 469 "mini_l.y" /* yacc.c:1646  */
+#line 590 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"else or endif\"\n", errors[tmp]); }
-#line 2146 "y.tab.c" /* yacc.c:1646  */
+#line 2269 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 472 "mini_l.y" /* yacc.c:1646  */
+#line 593 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; }
-#line 2152 "y.tab.c" /* yacc.c:1646  */
+#line 2275 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 473 "mini_l.y" /* yacc.c:1646  */
+#line 594 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).done = 1; inLoop += 1; }
-#line 2158 "y.tab.c" /* yacc.c:1646  */
+#line 2281 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 474 "mini_l.y" /* yacc.c:1646  */
+#line 595 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 2164 "y.tab.c" /* yacc.c:1646  */
+#line 2287 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 475 "mini_l.y" /* yacc.c:1646  */
+#line 596 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endloop\"\n", errors[tmp]); }
-#line 2170 "y.tab.c" /* yacc.c:1646  */
+#line 2293 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 476 "mini_l.y" /* yacc.c:1646  */
+#line 597 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endloop\"\n", errors[tmp]); }
-#line 2176 "y.tab.c" /* yacc.c:1646  */
+#line 2299 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 479 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2182 "y.tab.c" /* yacc.c:1646  */
+#line 600 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.relexpr_struct).done = (yyvsp[0].relexpr_struct).done; (yyval.relexpr_struct).stateStrt = (yyvsp[-2].statement_struct).stateStrt; strcpy((yyval.relexpr_struct).ret_name, (yyvsp[0].relexpr_struct).ret_name); }
+#line 2305 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 480 "mini_l.y" /* yacc.c:1646  */
-    {  inLoop += 1; }
-#line 2188 "y.tab.c" /* yacc.c:1646  */
+#line 601 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.relexpr_struct).done = 1; inLoop += 1; strcpy((yyval.relexpr_struct).ret_name, (yyvsp[0].relexpr_struct).ret_name); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = (yyvsp[0].relexpr_struct).end; }
+#line 2311 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 481 "mini_l.y" /* yacc.c:1646  */
+#line 602 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \";\"\n", errors[tmp]); }
-#line 2194 "y.tab.c" /* yacc.c:1646  */
+#line 2317 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 482 "mini_l.y" /* yacc.c:1646  */
+#line 603 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"statement or endloop\"\n", errors[tmp]); }
-#line 2200 "y.tab.c" /* yacc.c:1646  */
+#line 2323 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 483 "mini_l.y" /* yacc.c:1646  */
+#line 604 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"while\"\n", errors[tmp]); }
-#line 2206 "y.tab.c" /* yacc.c:1646  */
+#line 2329 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 484 "mini_l.y" /* yacc.c:1646  */
+#line 605 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"boolean expression\"\n", errors[tmp]); }
-#line 2212 "y.tab.c" /* yacc.c:1646  */
+#line 2335 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 487 "mini_l.y" /* yacc.c:1646  */
+#line 608 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = tmp2; i > (yyvsp[0].rw_struct).start; i--) {
 																					strcpy(code[i], code[i-1]);
 																			  	}
@@ -2222,11 +2345,11 @@ yyreduce:
 																			  	strcpy(code[(yyvsp[0].rw_struct).start], c);
 																			  	tmp2++;
 																			}
-#line 2226 "y.tab.c" /* yacc.c:1646  */
+#line 2349 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 496 "mini_l.y" /* yacc.c:1646  */
+#line 617 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".< %s\n", (yyvsp[-2].var_struct).name);
 																			  strcpy(code[tmp2], c1);
@@ -2238,17 +2361,17 @@ yyreduce:
 																			  strcpy(code[tmp2], c2);
 																			  tmp2++;
 																			}
-#line 2242 "y.tab.c" /* yacc.c:1646  */
+#line 2365 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 507 "mini_l.y" /* yacc.c:1646  */
+#line 628 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"var\"\n", errors[tmp]); }
-#line 2248 "y.tab.c" /* yacc.c:1646  */
+#line 2371 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 510 "mini_l.y" /* yacc.c:1646  */
+#line 631 "mini_l.y" /* yacc.c:1646  */
     { 	for(int i = tmp2; i > (yyvsp[0].rw_struct).start; i--) {
 																				strcpy(code[i], code[i-1]);
 																			}
@@ -2258,11 +2381,11 @@ yyreduce:
 																			strcpy(code[(yyvsp[0].rw_struct).start], c);
 																			tmp2++;
 																			}
-#line 2262 "y.tab.c" /* yacc.c:1646  */
+#line 2385 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 519 "mini_l.y" /* yacc.c:1646  */
+#line 640 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ".> %s\n", (yyvsp[-2].var_struct).name);
 																			  strcpy(code[tmp2], c1);
@@ -2274,77 +2397,103 @@ yyreduce:
 																			  strcpy(code[tmp2], c2);
 																			  tmp2++;
 																			}
-#line 2278 "y.tab.c" /* yacc.c:1646  */
+#line 2401 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 530 "mini_l.y" /* yacc.c:1646  */
+#line 651 "mini_l.y" /* yacc.c:1646  */
     { tmp--; printf("Syntax error at line %d: expecting \"var\"\n", errors[tmp]); }
-#line 2284 "y.tab.c" /* yacc.c:1646  */
+#line 2407 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 533 "mini_l.y" /* yacc.c:1646  */
+#line 654 "mini_l.y" /* yacc.c:1646  */
     { (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
-#line 2290 "y.tab.c" /* yacc.c:1646  */
+#line 2413 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 534 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2296 "y.tab.c" /* yacc.c:1646  */
+#line 655 "mini_l.y" /* yacc.c:1646  */
+    { char c1[200];
+																			  sprintf(c1, ". __temp__%d\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[200];
+																			  sprintf(c2, "|| __temp__%d, %s, %s\n", temp, (yyvsp[-2].relexpr_struct).ret_name, (yyvsp[0].relexpr_struct).ret_name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+
+																			  char c3[50];
+																			  sprintf(c3, "__temp__%d", temp);
+																			  strcpy((yyval.relexpr_struct).ret_name, c3);
+																			  temp++;
+																			  (yyval.relexpr_struct).start = (yyvsp[-2].relexpr_struct).start;
+																			  (yyval.relexpr_struct).end = tmp2;
+																			}
+#line 2435 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 537 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2302 "y.tab.c" /* yacc.c:1646  */
+#line 674 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
+#line 2441 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 538 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2308 "y.tab.c" /* yacc.c:1646  */
+#line 675 "mini_l.y" /* yacc.c:1646  */
+    { char c1[200];
+																			  sprintf(c1, ". __temp__%d\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[200];
+																			  sprintf(c2, "&& __temp__%d, %s, %s\n", temp, (yyvsp[-2].relexpr_struct).ret_name, (yyvsp[0].relexpr_struct).ret_name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+
+																			  char c3[50];
+																			  sprintf(c3, "__temp__%d", temp);
+																			  strcpy((yyval.relexpr_struct).ret_name, c3);
+																			  temp++;
+																			  (yyval.relexpr_struct).start = (yyvsp[-2].relexpr_struct).start;
+																			  (yyval.relexpr_struct).end = tmp2;
+																			}
+#line 2463 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 541 "mini_l.y" /* yacc.c:1646  */
-    { strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
-#line 2314 "y.tab.c" /* yacc.c:1646  */
+#line 694 "mini_l.y" /* yacc.c:1646  */
+    { char c1[200];
+																			  sprintf(c1, ". __temp__%d\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+																			  
+																			  char c2[200];
+																			  sprintf(c2, "! __temp__%d, %s\n", temp, (yyvsp[0].relexpr_struct).ret_name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+
+																			  char c3[50];
+																			  sprintf(c3, "__temp__%d", temp);
+																			  strcpy((yyval.relexpr_struct).ret_name, c3);
+
+																			  temp++;
+																			  strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type);
+																			  (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start;
+																			  (yyval.relexpr_struct).end = tmp2;
+																			}
+#line 2487 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 542 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2320 "y.tab.c" /* yacc.c:1646  */
+#line 713 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
+#line 2493 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 545 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2326 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 86:
-#line 546 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2332 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 87:
-#line 549 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2338 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 88:
-#line 550 "mini_l.y" /* yacc.c:1646  */
-    { strcpy((yyval.relexpr_struct).type, (yyvsp[0].relexpr_struct).type); (yyval.relexpr_struct).start = (yyvsp[0].relexpr_struct).start; (yyval.relexpr_struct).end = tmp2; }
-#line 2344 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 89:
-#line 553 "mini_l.y" /* yacc.c:1646  */
+#line 716 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2357,88 +2506,118 @@ yyreduce:
 
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.relexpr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.relexpr_struct).ret_name, c3);
 																			  temp++;
 																			  (yyval.relexpr_struct).start = (yyvsp[-2].expr_struct).start;
 																			  (yyval.relexpr_struct).end = tmp2;
 																			}
-#line 2366 "y.tab.c" /* yacc.c:1646  */
+#line 2515 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 86:
+#line 733 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.relexpr_struct).start = tmp2;
+																			  char c1[200];
+																			  sprintf(c1, ". __temp__%d\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[200];
+																			  sprintf(c2, "= __temp__%d, %d\n", temp, 1);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+																			  
+																			  char c3[50];
+																			  sprintf(c3, "__temp__%d", temp);
+																			  strcpy((yyval.relexpr_struct).ret_name, c3);
+																			  temp++;
+																			}
+#line 2536 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 87:
+#line 749 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.relexpr_struct).start = tmp2;
+																			  char c1[200];
+																			  sprintf(c1, ". __temp__%d\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c2[200];
+																			  sprintf(c2, "= __temp__%d, %d\n", temp, 0);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+																			  
+																			  char c3[50];
+																			  sprintf(c3, "__temp__%d", temp);
+																			  strcpy((yyval.relexpr_struct).ret_name, c3);
+																			  temp++;
+																			}
+#line 2557 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 88:
+#line 765 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.relexpr_struct).ret_name, (yyvsp[-1].relexpr_struct).ret_name); strcpy((yyval.relexpr_struct).type, "nested"); (yyval.relexpr_struct).start = (yyvsp[-1].relexpr_struct).start; }
+#line 2563 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 89:
+#line 766 "mini_l.y" /* yacc.c:1646  */
+    { tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]); }
+#line 2569 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 570 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2372 "y.tab.c" /* yacc.c:1646  */
+#line 769 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.comp_struct).name = "=="; }
+#line 2575 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 571 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2378 "y.tab.c" /* yacc.c:1646  */
+#line 770 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.comp_struct).name = "!="; }
+#line 2581 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 572 "mini_l.y" /* yacc.c:1646  */
-    { strcpy((yyval.relexpr_struct).ret_name, (yyvsp[-1].relexpr_struct).ret_name); strcpy((yyval.relexpr_struct).type, "nested"); }
-#line 2384 "y.tab.c" /* yacc.c:1646  */
+#line 771 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.comp_struct).name = "<"; }
+#line 2587 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 573 "mini_l.y" /* yacc.c:1646  */
-    { tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]); }
-#line 2390 "y.tab.c" /* yacc.c:1646  */
+#line 772 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.comp_struct).name = ">"; }
+#line 2593 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 576 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.comp_struct).name = "=="; }
-#line 2396 "y.tab.c" /* yacc.c:1646  */
+#line 773 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.comp_struct).name = "<="; }
+#line 2599 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 577 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.comp_struct).name = "<>"; }
-#line 2402 "y.tab.c" /* yacc.c:1646  */
+#line 774 "mini_l.y" /* yacc.c:1646  */
+    { (yyval.comp_struct).name = ">="; }
+#line 2605 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 578 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.comp_struct).name = "<"; }
-#line 2408 "y.tab.c" /* yacc.c:1646  */
+#line 775 "mini_l.y" /* yacc.c:1646  */
+    { tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]); }
+#line 2611 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 579 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.comp_struct).name = ">"; }
-#line 2414 "y.tab.c" /* yacc.c:1646  */
+#line 778 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
+#line 2617 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 580 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.comp_struct).name = "<="; }
-#line 2420 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 99:
-#line 581 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.comp_struct).name = ">="; }
-#line 2426 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 100:
-#line 582 "mini_l.y" /* yacc.c:1646  */
-    { tmp--; printf("Syntax error at line %d: expecting \"comparison operator\"\n", errors[tmp]); }
-#line 2432 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 101:
-#line 585 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.expr_struct).ret_name = (yyvsp[0].expr_struct).ret_name; strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2438 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 102:
-#line 586 "mini_l.y" /* yacc.c:1646  */
+#line 779 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2451,15 +2630,15 @@ yyreduce:
 																			  
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2459 "y.tab.c" /* yacc.c:1646  */
+#line 2638 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 103:
-#line 602 "mini_l.y" /* yacc.c:1646  */
+  case 99:
+#line 795 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2472,21 +2651,21 @@ yyreduce:
 																			  
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2480 "y.tab.c" /* yacc.c:1646  */
+#line 2659 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 104:
-#line 620 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.expr_struct).ret_name = (yyvsp[0].expr_struct).ret_name; strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2486 "y.tab.c" /* yacc.c:1646  */
+  case 100:
+#line 813 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
+#line 2665 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 105:
-#line 621 "mini_l.y" /* yacc.c:1646  */
+  case 101:
+#line 814 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2499,15 +2678,15 @@ yyreduce:
 																			  
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2507 "y.tab.c" /* yacc.c:1646  */
+#line 2686 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 106:
-#line 637 "mini_l.y" /* yacc.c:1646  */
+  case 102:
+#line 830 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2520,15 +2699,15 @@ yyreduce:
 																			  
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2528 "y.tab.c" /* yacc.c:1646  */
+#line 2707 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 107:
-#line 653 "mini_l.y" /* yacc.c:1646  */
+  case 103:
+#line 846 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2541,33 +2720,59 @@ yyreduce:
 																			  
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  temp++;
 																			  (yyval.expr_struct).start = (yyvsp[-2].expr_struct).start;
 																			}
-#line 2549 "y.tab.c" /* yacc.c:1646  */
+#line 2728 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 108:
-#line 671 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.expr_struct).ret_name = (yyvsp[0].expr_struct).ret_name; strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2555 "y.tab.c" /* yacc.c:1646  */
+  case 104:
+#line 864 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
+#line 2734 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 109:
-#line 672 "mini_l.y" /* yacc.c:1646  */
-    {  }
-#line 2561 "y.tab.c" /* yacc.c:1646  */
+  case 105:
+#line 865 "mini_l.y" /* yacc.c:1646  */
+    { char c1[200];
+																			  sprintf(c1, ". __temp__%d\n", temp);
+																			  strcpy(code[tmp2], c1);
+																			  tmp2++;
+
+																			  char c4[200];
+																			  sprintf(c4, ". __temp__%d\n", temp+1);
+																			  strcpy(code[tmp2], c4);
+																			  tmp2++;
+
+																			  char c5[200];
+																			  sprintf(c5, "= __temp__%d, %d\n", temp+1, 0);
+																			  strcpy(code[tmp2], c5);
+																			  tmp2++;
+
+																			  char c2[200];
+																			  sprintf(c2, "- __temp__%d, __temp__%d, %s\n", temp, temp+1, (yyvsp[0].expr_struct).ret_name);
+																			  strcpy(code[tmp2], c2);
+																			  tmp2++;
+																			  
+																			  char c3[50];
+																			  sprintf(c3, "__temp__%d", temp);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
+																			  temp+=2;
+																			  (yyval.expr_struct).start = (yyvsp[0].expr_struct).start;
+																			  strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type);
+																			}
+#line 2766 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 110:
-#line 673 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.expr_struct).ret_name = (yyvsp[0].expr_struct).ret_name; strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
-#line 2567 "y.tab.c" /* yacc.c:1646  */
+  case 106:
+#line 892 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.expr_struct).ret_name, (yyvsp[0].expr_struct).ret_name); strcpy((yyval.expr_struct).type, (yyvsp[0].expr_struct).type); }
+#line 2772 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 111:
-#line 676 "mini_l.y" /* yacc.c:1646  */
+  case 107:
+#line 895 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2589,15 +2794,15 @@ yyreduce:
 
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  strcpy((yyval.expr_struct).type, (yyvsp[0].var_struct).type);
 																			  temp++;
 																			}
-#line 2597 "y.tab.c" /* yacc.c:1646  */
+#line 2802 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 112:
-#line 701 "mini_l.y" /* yacc.c:1646  */
+  case 108:
+#line 920 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, ". __temp__%d\n", temp);
 																			  strcpy(code[tmp2], c1);
@@ -2610,21 +2815,21 @@ yyreduce:
 
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  (yyval.expr_struct).value = (yyvsp[0].expr_struct).value;
 																			  temp++;
 																			}
-#line 2618 "y.tab.c" /* yacc.c:1646  */
+#line 2823 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 113:
-#line 717 "mini_l.y" /* yacc.c:1646  */
-    { (yyval.expr_struct).ret_name = (yyvsp[-1].expr_struct).ret_name; }
-#line 2624 "y.tab.c" /* yacc.c:1646  */
+  case 109:
+#line 936 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.expr_struct).ret_name, (yyvsp[-1].expr_struct).ret_name); }
+#line 2829 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 114:
-#line 720 "mini_l.y" /* yacc.c:1646  */
+  case 110:
+#line 939 "mini_l.y" /* yacc.c:1646  */
     { strcpy(called[call], (yyvsp[-3].str));
 																			  calls[call] = currLine;
 																			  call++;
@@ -2639,49 +2844,88 @@ yyreduce:
 
 																			  char c3[50];
 																			  sprintf(c3, "__temp__%d", temp);
-																			  (yyval.expr_struct).ret_name = strdup(c3);
+																			  strcpy((yyval.expr_struct).ret_name, c3);
 																			  tmp2++;
 																			  temp++;
 																			}
-#line 2647 "y.tab.c" /* yacc.c:1646  */
+#line 2852 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 115:
-#line 740 "mini_l.y" /* yacc.c:1646  */
+  case 111:
+#line 959 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2653 "y.tab.c" /* yacc.c:1646  */
+#line 2858 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 116:
-#line 741 "mini_l.y" /* yacc.c:1646  */
+  case 112:
+#line 960 "mini_l.y" /* yacc.c:1646  */
     { char c1[200];
 																			  sprintf(c1, "param %s\n", (yyvsp[0].expr_struct).ret_name);
 																			  strcpy(code[tmp2], c1);
 																			  tmp2++;
 																			}
-#line 2663 "y.tab.c" /* yacc.c:1646  */
+#line 2868 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 117:
-#line 746 "mini_l.y" /* yacc.c:1646  */
+  case 113:
+#line 965 "mini_l.y" /* yacc.c:1646  */
     {  }
-#line 2669 "y.tab.c" /* yacc.c:1646  */
+#line 2874 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 118:
-#line 749 "mini_l.y" /* yacc.c:1646  */
-    { strcpy((yyval.var_struct).type, "var"); }
-#line 2675 "y.tab.c" /* yacc.c:1646  */
+  case 114:
+#line 968 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.var_struct).type, "var");
+																			  char found = 0;
+																			  for(int i = 0; i < d1; i++) {
+																					if(strcmp(declared[i], (yyvsp[0].str)) == 0) {
+																						found = 1;
+																					}
+																			  }
+
+																			  if(!found) {
+																				  printf("Error line %d: used variable \"%s\" was not previously declared.\n", currLine, (yyvsp[0].str));
+																				  error = 1;
+																			  }
+
+																			  for(int i = 0; i < arr; i++) {
+																					if(strcmp(arrNames[i], (yyvsp[0].str)) == 0) {
+																						printf("Error line %d: used array variable \"%s\" without specifying index.\n", currLine, (yyvsp[0].str));
+																				  		error = 1;
+																					}
+																			  }
+																			}
+#line 2899 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 119:
-#line 750 "mini_l.y" /* yacc.c:1646  */
-    { strcpy((yyval.var_struct).type, "array"); strcpy((yyval.var_struct).ind_name, (yyvsp[-1].expr_struct).ret_name); }
-#line 2681 "y.tab.c" /* yacc.c:1646  */
+  case 115:
+#line 988 "mini_l.y" /* yacc.c:1646  */
+    { strcpy((yyval.var_struct).type, "array");
+																			  strcpy((yyval.var_struct).ind_name, (yyvsp[-1].expr_struct).ret_name);
+																			  char found = 0;
+																			  for(int i = 0; i < d1; i++) {
+																					if(strcmp(declared[i], (yyvsp[-3].str)) == 0) {
+																						found = 1;
+																					}
+																			  }
+																			  if(!found) {
+																				  printf("Error line %d: used variable \"%s\" was not previously declared.\n", currLine, (yyvsp[-3].str));
+																				  error = 1;
+																			  }
+
+																			  for(int i = 0; i < varInd; i++) {
+																					if(strcmp(varNames[i], (yyvsp[-3].str)) == 0) {
+																						printf("Error line %d: specified array index for symbol \"%s\" which is a non-array variable.\n", currLine, (yyvsp[-3].str));
+																				  		error = 1;
+																					}
+																			  }
+																			  
+																			}
+#line 2925 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2685 "y.tab.c" /* yacc.c:1646  */
+#line 2929 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2909,7 +3153,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 752 "mini_l.y" /* yacc.c:1906  */
+#line 1010 "mini_l.y" /* yacc.c:1906  */
 
 
 int main(int argc, char **argv) {
@@ -2921,6 +3165,12 @@ int main(int argc, char **argv) {
    }//end if
    yyparse(); // Calls yylex() for tokens.
    fclose(yyin);
+   if(!hasMain) {
+	   printf("Error: no main function definition is given.\n");
+	   return 0;
+   }
+   else if(error) return 0;
+
    for(int i = 0; i < 10000; i++) {
 	   printf(code[i]);
    }

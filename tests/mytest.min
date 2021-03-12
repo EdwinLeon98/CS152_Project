@@ -4,16 +4,20 @@ endparams
 
 beginlocals
 
-  i: integer;
+  i, j: integer;
 
 endlocals
 
 beginbody	## main program
 
-  i := 40;
+  read i;
 
-  i := i*1000;
-  
+  j := 0;
+  if(j > 3 or false) then
+    i := i + 100;
+  endif;
+  j := j + 1;
+
   write i;
 
 endbody

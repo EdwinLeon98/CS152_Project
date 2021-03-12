@@ -101,7 +101,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 31 "mini_l.y" /* yacc.c:1909  */
+#line 37 "mini_l.y" /* yacc.c:1909  */
 
   double dval;
   int ival;
@@ -134,20 +134,21 @@ union YYSTYPE
 	char* name;
 	int value;
 	char* tokentype;
-	char* ret_name;
+	char ret_name[80];
 	char* next;
 	int start;
 	char type[20];
   } expr_struct;
 
   struct RelExprStruct {
-	char* ret_name;
+	char ret_name[80];
 	int start;
 	char inner[50];
 	char type[10];
 	int done;
 	int end;
 	int outside;
+	int stateStrt;
   } relexpr_struct;
 
   struct CompStruct {
@@ -156,6 +157,8 @@ union YYSTYPE
 
   struct StatementStruct {
 	char* IR[254];
+	int stateStrt;
+	char ret_name[80];
   } statement_struct;
 
   struct FuncStruct {
@@ -164,7 +167,7 @@ union YYSTYPE
 	  char* IR[254];
   } func_struct;
 
-#line 168 "y.tab.h" /* yacc.c:1909  */
+#line 171 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
